@@ -19,29 +19,46 @@
 #ifndef __MENUSTRUCTURE_HPP__
 #define __MENUSTRUCTURE_HPP__
 
+#include <string>
+#include <ext/hash_map>
+#include <boost/shared_ptr.hpp>
+
+#include "StringHash.hpp"
+
+//this means we can use std::hash_map which should be more future proof
+namespace std { using namespace __gnu_cxx; }
+
 /**
  * The base class for menus, the system is based on the Composite pattern
  */
 class MenuBase
 {
 	public:
+		typedef boost::shared_ptr<MenuBase> MenuBasePtr;
+		typedef std::hash_map<std::string, MenuBasePtr>::iterator ItemsIterator;
+
+	public:
 		MenuBase(const char *name, const char *description, const char *shortcut);
+		MenuBase(const MenuBase &rhs);
 		virtual ~MenuBase();
+
+		MenuBase &operator=(const MenuBase &rhs);
 
 		/**
 		 * This is a stub method which throws a not implemented exception if called.
 		 * @param item the item to add
 		 */
-		virtual void addItem(const MenuBase &item)
+		virtual void addItem(MenuBasePtr item);
+
 		/**
 		 * This is a stub method which throws a not implemented exception if called.
 		 * @param itemName the name of the item
 		 */
-		virtual const MenuBase &getItem(const string &itemName);
+		virtual MenuBasePtr getItem(const std::string &itemName);
 
-		virtual const string &getName() const;
-		virtual const string &getDescription() const;
-		virtual const string &getShortCut() const;
+		virtual const std::string &getName() const;
+		virtual const std::string &getDescription() const;
+		virtual const std::string &getShortCut() const;
 
 		/**
 		 * This is a stub method which throws a not implemented exception if called.
@@ -52,14 +69,14 @@ class MenuBase
 	private:
 
 		//The full name of the menuitem
-		string name;
+		std::string name;
 		//description of the menuitem
-		string description;
-		//shortcut string, e.g. if the item is "quit", this might be "q"
-		string shortCut;
+		std::string description;
+		//shortcut std::string, e.g. if the item is "quit", this might be "q"
+		std::string shortcut;
 };
 
-class Menu : MenuBase
+class Menu : public MenuBase
 {
 	public:
 		Menu(const char *name, const char *description, const char *shortcut);
@@ -73,13 +90,13 @@ class Menu : MenuBase
 		 * menu. The <item> object is copied and stored internally.
 		 * @param item The item to store.
 		 */
-		virtual void addItem(const MenuBase &item);
+		virtual void addItem(MenuBasePtr item);
 		/**
 		 * look up a menu item by name and retrieve it.
 		 * @param itemName the name of the menu item.
 		 * @return a pointer to the object, or NULL if not found.
 		 */
-		virtual const MenuBase *getItem(const string &itemName);
+		virtual MenuBasePtr getItem(const std::string &itemName);
 
 		/**
 		 * Print the menu title and the options for this menu
@@ -88,10 +105,10 @@ class Menu : MenuBase
 		virtual void print(std::ostream &output, unsigned int depth=1);
 
 	private:
-		hash_map<string, boost::shared_ptr<MenuBase> >items;
+		std::hash_map<std::string, MenuBasePtr> items;
 };
 
-class MenuItem : MenuBase
+class MenuItem : public MenuBase
 {
 	public:
 		MenuItem(const char *name, const char *description, const char *shortCut);	

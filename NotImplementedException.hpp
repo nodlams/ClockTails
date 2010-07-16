@@ -20,13 +20,15 @@
 #define __NOTIMPLEMENTEDEXCEPTION_HPP__
 
 #include <stdexcept>
+#include <string>
 
 class NotImplementedException : std::runtime_error
 {
-	NotImplementedException(const string &what)
-		: std::runtime_error(what)
-	{
-	}
+	public:
+		NotImplementedException(const std::string &what)
+			: std::runtime_error(what)
+		{
+		}
 };
 
 #endif
