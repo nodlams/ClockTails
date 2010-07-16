@@ -164,3 +164,39 @@ void MenuItem::print(std::ostream &output, unsigned int depth)
 {
 	output << getName() << "\t(" << getShortCut() << "):\t" << getDescription() << std::endl;
 }
+
+/*
+	//test menu structure
+	boost::shared_ptr<MenuBase> mi1(new MenuItem("test1", "test1 desc", "t1"));
+	boost::shared_ptr<MenuBase> mi2(new MenuItem("test2", "test2 desc", "t2"));
+	boost::shared_ptr<MenuBase> mi3(new MenuItem("test3", "test3 desc", "t3"));
+	boost::shared_ptr<MenuBase> mi4(new MenuItem("test4", "test4 desc", "t4"));
+
+	boost::shared_ptr<MenuBase> m1(new Menu("menu1", "menu1 desc", "m1"));
+
+	boost::shared_ptr<MenuBase> mi5(new MenuItem("test5", "test5 desc", "t5"));
+	boost::shared_ptr<MenuBase> mi6(new MenuItem("test6", "test6 desc", "t6"));
+	boost::shared_ptr<MenuBase> mi7(new MenuItem("test7", "test7 desc", "t7"));
+	boost::shared_ptr<MenuBase> mi8(new MenuItem("test8", "test8 desc", "t8"));
+
+	boost::shared_ptr<MenuBase> m2(new Menu("menu2", "menu2 desc", "m2"));
+
+	m2->addItem(mi5);
+	m2->addItem(mi6);
+	m2->addItem(mi7);
+	m2->addItem(mi8);
+	
+
+	m1->addItem(mi1);
+	m1->addItem(mi2);
+	m1->addItem(m2);
+	m1->addItem(mi3);
+	m1->addItem(mi4);
+
+	m1->print(std::cout, 1);
+
+	boost::shared_ptr<MenuBase> menuret = m1->getItem("m2");
+	menuret->print(std::cout, 1);
+	boost::shared_ptr<MenuBase> menuret2 = menuret->getItem("t5");
+	menuret2->getItem("shouldthrow");
+*/

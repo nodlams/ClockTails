@@ -17,10 +17,15 @@
  */
 #include <iostream>
 #include "ClockTailGenerator.hpp"
+#include "CTController.hpp"
 #include "MenuStructure.hpp"
 
 int main(int argc, char **argv)
 {
 	std::cout << "Hello world! *Hic!*" << std::endl;
+	ClockTailGenerator model;
+	CTController controller(model);
 
+	TextView tv(model, controller);
+	tv.startInputLoop();
 }
