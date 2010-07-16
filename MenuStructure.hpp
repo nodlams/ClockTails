@@ -36,6 +36,8 @@ class MenuBase
 	public:
 		typedef boost::shared_ptr<MenuBase> MenuBasePtr;
 		typedef std::hash_map<std::string, MenuBasePtr>::iterator ItemsIterator;
+		//column widths for printing
+		static const int CWNAME=15;
 
 	public:
 		MenuBase(const char *name, const char *description, const char *shortcut);

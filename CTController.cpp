@@ -27,7 +27,7 @@ CTController::CTController(CTModelIface &theModel)
 
 }
 
-CTController::CTController(CTController &rhs)
+CTController::CTController(const CTController &rhs)
 	: model(rhs.model), view(rhs.view)
 {
 
@@ -40,12 +40,19 @@ CTController::~CTController()
 
 CTController &CTController::operator=(const CTController &rhs)
 {
+	if (this != &rhs)
+	{
+		CTController tmp(rhs);	
+		this->model = tmp.model;
+		std::swap(this->view, tmp.view);
+	}
 
+	return *this;
 }
 
 void CTController::generateClockTail()
 {
-
+	model.generateNextClockTail();
 }
 
 void CTController::sendCTFeedBack(const CTFeedBack &feedback)
@@ -55,5 +62,5 @@ void CTController::sendCTFeedBack(const CTFeedBack &feedback)
 
 void CTController::exit()
 {
-
+	//do cleanup etc here
 }

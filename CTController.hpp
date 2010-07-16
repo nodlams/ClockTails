@@ -28,7 +28,7 @@ class CTController : public CTControllerIface
 {
 	public:
 		CTController(CTModelIface &model);
-		CTController(CTController &rhs);
+		CTController(const CTController &rhs);
 		virtual ~CTController();
 
 		CTController &operator=(const CTController &rhs);
@@ -38,7 +38,7 @@ class CTController : public CTControllerIface
 		virtual void exit();
 
 	private:
-		const CTModelIface &model;
+		CTModelIface &model;
 		TextView view;
 };
 

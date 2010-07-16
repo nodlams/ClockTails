@@ -19,6 +19,9 @@
 #ifndef __CLOCKTAIL_HPP__
 #define __CLOCKTAIL_HPP__
 
+#include <vector>
+#include <string>
+
 class ClockTail
 {
 	public:
@@ -27,8 +30,21 @@ class ClockTail
 		virtual ~ClockTail();
 
 		ClockTail &operator=(const ClockTail &rhs);
-	private:
 
+		void addMixer(const std::string &mixer);
+		void addSpirit(const std::string &spirit);
+		void addNameComponent(const std::string &name);
+
+		const std::vector<std::string> &getMixers();
+		const std::vector<std::string> &getSpirits();
+		const std::vector<std::string> &getNameComponents();
+
+		void print(std::ostream &output);
+		
+	private:
+		std::vector<std::string> namecomponents;
+		std::vector<std::string> spirits;
+		std::vector<std::string> mixers;
 };
 
 #endif

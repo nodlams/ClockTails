@@ -24,12 +24,23 @@
 #include <vector>
 
 #include "MenuStructure.hpp"
+#include "CTObserver.hpp"
 
 class CTModelIface;
 class CTControllerIface;
+class ClockTail;
 
-class TextView
+#include <string>
+#include <list>
+
+class TextView : public CTObserver
 {
+	public:
+		static const std::string GENERATEN;
+		static const std::string QUITN;
+		//store this many of the previously generated clocktails
+		static const size_t STOREDCTCOUNT=3;
+
 	public:
 		TextView(CTModelIface &model, CTControllerIface &controller);
 		TextView(const TextView &rhs);
@@ -41,8 +52,31 @@ class TextView
 		 */
 		virtual void startInputLoop();
 
+		/**
+		 * Called by the model when it's generated a new clock Tail.
+		 */
+		virtual void updateClockTail();
+
 	private:
+		/**
+		 * Print the menu to the supplied stream
+		 *
+		 * @param theMenu the menu item to print.
+		 * @param stream the output stream to print it to
+		 */
 		virtual void printMenu(MenuBase::MenuBasePtr theMenu, std::ostream &stream);
+
+		/**
+		 * print a single clocktail
+		 * @param the output stream
+		 * @param the clocktail to print
+		 */
+		virtual void printClockTail(std::ostream &output, ClockTail &clocktail);
+
+		/**
+		 * Print the clock tails in the history
+		 */
+		virtual void printClockTails(std::ostream &output);
 
 		/**
 		 * get input from the user, the method generates a prompt looking like the following on <output>:
@@ -64,11 +98,25 @@ class TextView
 		 */
 		virtual MenuBase::MenuBasePtr initMenus();
 
+		/**
+		 * Handle a menu selection, and perform the appropriate action.
+		 */
+		virtual void handleSelection(MenuBase::MenuBasePtr item);
+
+		/**
+		 * Update the list of the last 3 clocktails generated.
+		 */
+		virtual void updateClocktailsList(ClockTail &newOne);
+
 		CTModelIface &model;
 		CTControllerIface &controller;
 
 		//The root node for the menu
 		MenuBase::MenuBasePtr menu;	
+		//Pointer to the current menu we are displaying to the user
+		MenuBase::MenuBasePtr currentMenu;
+
+		std::list<ClockTail> lastNClockTails;
 };
 
 #endif

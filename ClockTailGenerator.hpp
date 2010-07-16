@@ -19,10 +19,14 @@
 #define __CLOCKTAILGENERATOR_HPP__
 
 #include "CTModelIface.hpp"
+#include "ClockTail.hpp"
+#include "InputFile.hpp"
+#include <vector>
+#include <iostream>
+#include <string>
 
 class CTFeedBack;
 class CTObserver;
-class ClockTail;
 
 class ClockTailGenerator : public CTModelIface
 {
@@ -35,13 +39,22 @@ class ClockTailGenerator : public CTModelIface
 
 		virtual void initialise();
 		virtual void registerObserver(CTObserver &observer);
-		virtual void generateNextClockTail();
+		//notify the observers that a new clocktail was generated
+		virtual void notifyObservers();
+		virtual void generateNextClockTail()=0;
+		virtual void print(std::ostream &out)=0;
 		virtual void receiveClockTailFeedback(const CTFeedBack &feedback);
 		virtual ClockTail getCurrentClockTail();
 		virtual void deinitialise();
 
-	private:
+		virtual void addSpiritFile(InputFile &input);
+		virtual void addMixerFile(InputFile &input);
+		virtual void addNameFile(InputFile &input);
 
+	protected:
+		std::vector<InputFile> spiritFiles, mixerFiles, nameFiles;
+		std::vector<CTObserver *> observers;
+		ClockTail currentClockTail;
 };
 
 #endif

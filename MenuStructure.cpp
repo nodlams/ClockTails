@@ -19,6 +19,8 @@
 #include "MenuStructure.hpp"
 #include "NotImplementedException.hpp"
 #include <string>
+#include <iomanip>
+#include <sstream>
 
 MenuBase::MenuBase(const char *thename, const char *thedescription, const char *theshortcut)
 	: name(thename), description(thedescription), shortcut(theshortcut)
@@ -162,7 +164,9 @@ MenuItem &MenuItem::operator=(const MenuItem &rhs)
 
 void MenuItem::print(std::ostream &output, unsigned int depth)
 {
-	output << getName() << "\t(" << getShortCut() << "):\t" << getDescription() << std::endl;
+	std::ostringstream oss;
+	oss << getName() << " (" << getShortCut() << "):";	
+	output << std::setw(CWNAME) << std::left << oss.str() << getDescription() << std::endl;
 }
 
 /*

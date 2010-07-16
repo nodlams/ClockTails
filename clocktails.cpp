@@ -16,16 +16,37 @@
  * =====================================================================================
  */
 #include <iostream>
-#include "ClockTailGenerator.hpp"
+#include <fstream>
+#include "RandomClockTailGenerator.hpp"
 #include "CTController.hpp"
 #include "MenuStructure.hpp"
 
 int main(int argc, char **argv)
 {
 	std::cout << "Hello world! *Hic!*" << std::endl;
-	ClockTailGenerator model;
-	CTController controller(model);
+	std::ifstream f1("mixers1.txt");
+	InputFile if1;
+	if1.loadData(f1);
+	std::ifstream f2("spirits1.txt");
+	InputFile if2;
+	if2.loadData(f2);
+	std::ifstream f3("names1.txt");
+	InputFile if3;
+	if3.loadData(f3);
+	std::ifstream f4("names2.txt");
+	InputFile if4;
+	if4.loadData(f4);
 
+	RandomClockTailGenerator model;
+	model.addMixerFile(if1);
+	model.addMixerFile(if1);
+	model.addSpiritFile(if2);
+	model.addNameFile(if3);
+	model.addNameFile(if4);
+
+	CTController controller(model);
 	TextView tv(model, controller);
+	model.registerObserver(tv);
+
 	tv.startInputLoop();
 }
