@@ -100,8 +100,10 @@ Menu &Menu::operator=(const Menu &rhs)
 
 void Menu::addItem(MenuBasePtr item)
 {
-	const std::string &name = item->getName();
-	items[name] = item;
+	//items are looked up based on shortcut, since that's what the user will enter
+	const std::string &shortcut = item->getShortCut();
+	items[shortcut] = item;
+	itemsOrdered.push_back(item);
 }
 
 MenuBase::MenuBasePtr Menu::getItem(const std::string &itemName)
@@ -124,12 +126,17 @@ void Menu::print(std::ostream &output, unsigned int depth)
 
 		output << getName() << ":" << std::endl;
 
-		for (ItemsIterator it = items.begin(); it != items.end(); ++it)
+		for (std::vector<MenuBasePtr>::iterator it = itemsOrdered.begin(); it != itemsOrdered.end(); ++it)
 		{
-			(*it).second->print(output, depth);
+			(*it)->print(output, depth);
 		}
 
 		output << std::endl;
+	}
+	else if (depth == 0)
+	{
+		//treat it like a standard menu item and just print the details
+		output << getName() << "\t(" << getShortCut() << "):\t" << getDescription() << std::endl;
 	}
 }
 

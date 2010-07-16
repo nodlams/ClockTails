@@ -105,7 +105,12 @@ class Menu : public MenuBase
 		virtual void print(std::ostream &output, unsigned int depth=1);
 
 	private:
+		//hash_map for quick lookup of menu items
 		std::hash_map<std::string, MenuBasePtr> items;
+		//menu items should be printed in the order they were added, so also
+		//store the poiners in a vector in order.
+		std::vector<MenuBasePtr> itemsOrdered;
+
 };
 
 class MenuItem : public MenuBase
