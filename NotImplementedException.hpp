@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  CTObserver.hpp
+ *       Filename:  NotImplementedException.hpp
  *
- *    Description:  Observer interface for clocktails views
+ *    Description:  Thrown if a method is not implemented in a class
  *
  *        Version:  1.0
- *        Created:  16/07/10 08:51:14
+ *        Created:  16/07/10 11:12:15
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,16 +15,18 @@
  *
  * =====================================================================================
  */
-#ifndef __CTOBSERVER_HPP__
-#define __CTOBSERVER_HPP__
 
-class CTObserver
+#ifndef __NOTIMPLEMENTEDEXCEPTION_HPP__
+#define __NOTIMPLEMENTEDEXCEPTION_HPP__
+
+#include <stdexcept>
+
+class NotImplementedException : std::runtime_error
 {
-	public:
-		virtual ~CTObserver();
-		
-		//called by the model when a new clocktail has been generated.
-		virtual void updateClockTail()=0;
+	NotImplementedException(const string &what)
+		: std::runtime_error(what)
+	{
+	}
 };
 
 #endif

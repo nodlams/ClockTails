@@ -19,10 +19,14 @@
 #ifndef __CTMODELIFACE_HPP__
 #define __CTMODELIFACE_HPP__
 
+class CTFeedBack;
+class CTObserver;
+class ClockTail;
+
 class CTModelIface
 {
 	public:
-		virtual ~CTModelIface();
+		virtual ~CTModelIface() {}
 
 		//pure virtual methods
 		virtual void initialise()=0;
@@ -33,13 +37,9 @@ class CTModelIface
 		virtual void receiveClockTailFeedback(const CTFeedBack &feedback)=0;
 		//return the clocktail that was just generate, or generate one and
 		//return if there is no current clocktail.
-		virtual void getCurrentClockTail()=0;
+		virtual ClockTail getCurrentClockTail()=0;
 		//called when the program will exit.
 		virtual void deinitialise()=0;
-		
-	private:
-		//make constructor private as we never want to instantiate this.
-		CTModelIface();
 };
 
 #endif

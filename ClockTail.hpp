@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  CTObserver.hpp
+ *       Filename:  ClockTail.hpp
  *
- *    Description:  Observer interface for clocktails views
+ *    Description:  represents a generated ClockTail
  *
  *        Version:  1.0
- *        Created:  16/07/10 08:51:14
+ *        Created:  16/07/10 09:33:03
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,16 +15,20 @@
  *
  * =====================================================================================
  */
-#ifndef __CTOBSERVER_HPP__
-#define __CTOBSERVER_HPP__
 
-class CTObserver
+#ifndef __CLOCKTAIL_HPP__
+#define __CLOCKTAIL_HPP__
+
+class ClockTail
 {
 	public:
-		virtual ~CTObserver();
-		
-		//called by the model when a new clocktail has been generated.
-		virtual void updateClockTail()=0;
+		ClockTail();
+		ClockTail(const ClockTail &rhs);
+		virtual ~ClockTail();
+
+		ClockTail &operator=(const ClockTail &rhs);
+	private:
+
 };
 
 #endif
