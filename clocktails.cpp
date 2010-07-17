@@ -16,34 +16,51 @@
  * =====================================================================================
  */
 #include <iostream>
+#include <vector>
+#include <string>
 #include <fstream>
 #include "RandomClockTailGenerator.hpp"
 #include "CTController.hpp"
 #include "MenuStructure.hpp"
+#include <boost/program_options.hpp>
+
+namespace po = boost::program_options;
+
+po::options_description setupArgs()
+{
+	po::options_description desc("Allowed Arguments");
+	//yes this is valid c++, stop crying!
+	desc.add_options()
+		("help", "produce help message")
+		("mixers,M", po::value<std::vector<std::string> >(), "Files containing mixer names")
+		("spirits,S", po::value<std::vector<std::string> >(), "Files containing spirit names")
+		("names,N", po::value<std::vector<std::string> >(), "Files containing drink names");
+
+	return desc;
+}
+
+po::variables_map parseArgs(int argc, char **argv, po::options_description &desc)
+{
+	po::variables_map vm;
+	po::store(po::parse_command_line(argc, argv, desc), vm);	
+	po::notify(vm);
+
+	if (vm.count("help"))
+	{
+		std::cout << desc << std::endl;
+		exit(1);
+	}
+
+	return vm;
+}
 
 int main(int argc, char **argv)
 {
-	std::cout << "Hello world! *Hic!*" << std::endl;
-	std::ifstream f1("mixers1.txt");
-	InputFile if1;
-	if1.loadData(f1);
-	std::ifstream f2("spirits1.txt");
-	InputFile if2;
-	if2.loadData(f2);
-	std::ifstream f3("names1.txt");
-	InputFile if3;
-	if3.loadData(f3);
-	std::ifstream f4("names2.txt");
-	InputFile if4;
-	if4.loadData(f4);
+	po::options_description desc = setupArgs();
+	po::variables_map vm = parseArgs(argc, argv, desc);
 
 	RandomClockTailGenerator model;
-	model.addMixerFile(if1);
-	model.addMixerFile(if1);
-	model.addSpiritFile(if2);
-	model.addNameFile(if3);
-	model.addNameFile(if4);
-
+	
 	CTController controller(model);
 	TextView tv(model, controller);
 	model.registerObserver(tv);

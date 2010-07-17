@@ -19,6 +19,8 @@
 #ifndef __CTMODELIFACE_HPP__
 #define __CTMODELIFACE_HPP__
 
+#include <iostream>
+
 class CTFeedBack;
 class CTObserver;
 class ClockTail;
@@ -40,6 +42,8 @@ class CTModelIface
 		virtual ClockTail getCurrentClockTail()=0;
 		//called when the program will exit.
 		virtual void deinitialise()=0;
+		//output information for this generator to the output stream.
+		virtual void print(std::ostream &out)=0;
 };
 
 #endif

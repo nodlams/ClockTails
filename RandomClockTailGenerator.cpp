@@ -46,8 +46,13 @@ RandomClockTailGenerator &RandomClockTailGenerator::operator=(const RandomClockT
 std::string RandomClockTailGenerator::getRandomLine(InputFile &input)
 {
 	unsigned int range = input.size();
-	unsigned int rangedRandom = (unsigned int)(double(range) * (double(rand()) / double(RAND_MAX)));
-	return *input.getLine(rangedRandom);
+	std::string ret("Not Found!");
+	if (range > 0)
+	{
+		unsigned int rangedRandom = (unsigned int)(double(range) * (double(rand()) / double(RAND_MAX)));
+		ret = *input.getLine(rangedRandom);
+	}
+	return ret;
 }
 
 void RandomClockTailGenerator::generateNextClockTail()
@@ -80,5 +85,5 @@ void RandomClockTailGenerator::generateNextClockTail()
 
 void RandomClockTailGenerator::print(std::ostream &out)
 {
-	out << "Random clock tail generator, seeded with " << seed << std::endl;
+	out << "Random, seeded with " << seed << std::endl;
 }

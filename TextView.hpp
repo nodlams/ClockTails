@@ -39,7 +39,7 @@ class TextView : public CTObserver
 		static const std::string GENERATEN;
 		static const std::string QUITN;
 		//store this many of the previously generated clocktails
-		static const size_t STOREDCTCOUNT=3;
+		static const size_t STOREDCTCOUNT=10;
 
 	public:
 		TextView(CTModelIface &model, CTControllerIface &controller);
@@ -58,6 +58,8 @@ class TextView : public CTObserver
 		virtual void updateClockTail();
 
 	private:
+		virtual void printGeneratorInfo(std::ostream &stream);
+		
 		/**
 		 * Print the menu to the supplied stream
 		 *
@@ -107,6 +109,16 @@ class TextView : public CTObserver
 		 * Update the list of the last 3 clocktails generated.
 		 */
 		virtual void updateClocktailsList(ClockTail &newOne);
+
+		/**
+		 * Clears the terminal
+		 */
+		virtual void clearScreen();
+
+		/**
+		 * Prints a happy shiny header
+		 */
+		virtual void printHeader(std::ostream &output);
 
 		CTModelIface &model;
 		CTControllerIface &controller;

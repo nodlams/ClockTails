@@ -22,5 +22,5 @@ endif()
 
 AUX_SOURCE_DIRECTORY(. SOURCES)
 
-#link_libraries(config++ glui glut GLU GL)
 add_executable(clocktails ${SOURCES})
+target_link_libraries(clocktails boost_program_options)

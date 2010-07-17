@@ -20,13 +20,11 @@
 #define __MENUSTRUCTURE_HPP__
 
 #include <string>
-#include <ext/hash_map>
+#include <vector>
+#include <tr1/unordered_map>
 #include <boost/shared_ptr.hpp>
 
-#include "StringHash.hpp"
-
-//this means we can use std::hash_map which should be more future proof
-namespace std { using namespace __gnu_cxx; }
+//include "StringHash.hpp"
 
 /**
  * The base class for menus, the system is based on the Composite pattern
@@ -35,7 +33,7 @@ class MenuBase
 {
 	public:
 		typedef boost::shared_ptr<MenuBase> MenuBasePtr;
-		typedef std::hash_map<std::string, MenuBasePtr>::iterator ItemsIterator;
+		typedef std::tr1::unordered_map<std::string, MenuBasePtr>::iterator ItemsIterator;
 		//column widths for printing
 		static const int CWNAME=15;
 
@@ -108,7 +106,7 @@ class Menu : public MenuBase
 
 	private:
 		//hash_map for quick lookup of menu items
-		std::hash_map<std::string, MenuBasePtr> items;
+		std::tr1::unordered_map<std::string, MenuBasePtr> items;
 		//menu items should be printed in the order they were added, so also
 		//store the poiners in a vector in order.
 		std::vector<MenuBasePtr> itemsOrdered;

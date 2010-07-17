@@ -22,6 +22,7 @@
 #include "ClockTail.hpp"
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
 
 const std::string TextView::GENERATEN = "Generate";
 const std::string TextView::QUITN = "Quit";
@@ -89,8 +90,12 @@ void TextView::startInputLoop()
 	bool quit=false;
 	while (!quit)
 	{
+		clearScreen();
+		printHeader(std::cout);
+		printGeneratorInfo(std::cout);
 		printClockTails(std::cout);
 		printMenu(currentMenu, std::cout);
+
 		std::string input = getUserInput(std::cout, std::cin, "Enter Selection");
 		//check if the input string is a valid identifier for a menu item.
 		MenuBase::MenuBasePtr item = menu->getItem(input);
@@ -109,6 +114,13 @@ void TextView::updateClockTail()
 	ClockTail newOne = model.getCurrentClockTail();
 	//update the list of generated clock tails
 	updateClocktailsList(newOne);
+}
+
+void TextView::printGeneratorInfo(std::ostream &out)
+{
+	out << "Using Generator: ";
+	model.print(out);
+	out << std::endl;
 }
 
 void TextView::printMenu(MenuBase::MenuBasePtr theMenu, std::ostream &output)
@@ -170,4 +182,16 @@ void TextView::updateClocktailsList(ClockTail &newOne)
 	{
 		lastNClockTails.pop_back();
 	}
+}
+
+void TextView::clearScreen()
+{
+	//I don't want to bring in curses or anything like that here, so lets do
+	//something dangerous and unportable instead! :-)
+	system("clear");
+}
+
+void TextView::printHeader(std::ostream &out)
+{
+	out << "Welcome to ClockTails version 0.1" << std::endl;
 }
