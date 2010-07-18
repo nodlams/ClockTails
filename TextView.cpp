@@ -90,7 +90,7 @@ void TextView::startInputLoop()
 	bool quit=false;
 	while (!quit)
 	{
-		clearScreen();
+		//clearScreen();
 		printHeader(std::cout);
 		printGeneratorInfo(std::cout);
 		printClockTails(std::cout);
@@ -188,7 +188,9 @@ void TextView::clearScreen()
 {
 	//I don't want to bring in curses or anything like that here, so lets do
 	//something dangerous and unportable instead! :-)
-	system("clear");
+	int retval = system("clear");
+	if (retval != 0)
+		std::cerr << "Error! clear screen command failed to execute!" << std::endl;
 }
 
 void TextView::printHeader(std::ostream &out)

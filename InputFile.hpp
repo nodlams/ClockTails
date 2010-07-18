@@ -26,6 +26,9 @@ class InputFile
 	public:
 		InputFile();
 		virtual ~InputFile();
+		InputFile(const InputFile &rhs);
+
+		InputFile &operator=(const InputFile &rhs);
 
 		void loadData(std::istream &input);
 

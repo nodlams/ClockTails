@@ -25,6 +25,21 @@ InputFile::~InputFile()
 {
 }
 
+InputFile::InputFile(const InputFile &rhs)
+	: lines(rhs.lines)
+{
+}
+
+InputFile &InputFile::operator=(const InputFile &rhs)
+{
+	if (this != &rhs)
+	{
+		InputFile input(rhs);
+		std::swap(lines, input.lines);
+	}
+	return *this;
+}
+
 void InputFile::loadData(std::istream &input)
 {
 	std::string line;
