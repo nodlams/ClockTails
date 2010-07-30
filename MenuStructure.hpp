@@ -21,10 +21,10 @@
 
 #include <string>
 #include <vector>
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <boost/shared_ptr.hpp>
 
-//include "StringHash.hpp"
+#include "FeedBack.hpp"
 
 /**
  * The base class for menus, the system is based on the Composite pattern
@@ -33,7 +33,7 @@ class MenuBase
 {
 	public:
 		typedef boost::shared_ptr<MenuBase> MenuBasePtr;
-		typedef std::tr1::unordered_map<std::string, MenuBasePtr>::iterator ItemsIterator;
+		typedef std::unordered_map<std::string, MenuBasePtr>::iterator ItemsIterator;
 		//column widths for printing
 		static const int CWNAME=15;
 
@@ -106,7 +106,7 @@ class Menu : public MenuBase
 
 	private:
 		//hash_map for quick lookup of menu items
-		std::tr1::unordered_map<std::string, MenuBasePtr> items;
+		std::unordered_map<std::string, MenuBasePtr> items;
 		//menu items should be printed in the order they were added, so also
 		//store the poiners in a vector in order.
 		std::vector<MenuBasePtr> itemsOrdered;

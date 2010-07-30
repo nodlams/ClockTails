@@ -21,18 +21,20 @@
 #include "CTModelIface.hpp"
 #include "ClockTail.hpp"
 #include "InputFile.hpp"
+#include "History.hpp"
+
 #include <vector>
 #include <iostream>
 #include <string>
 
-class CTFeedBack;
+class FeedBack;
 class CTObserver;
 class Selector;
 
 class ClockTailGenerator : public CTModelIface
 {
 	public:
-		ClockTailGenerator(Selector &selector);
+		ClockTailGenerator(Selector &selector, History &history);
 		ClockTailGenerator(const ClockTailGenerator &rhs);
 		virtual ~ClockTailGenerator();
 
@@ -46,7 +48,7 @@ class ClockTailGenerator : public CTModelIface
 		virtual void generateNextClockTail();
 		virtual void print(std::ostream &out);
 
-		virtual void receiveClockTailFeedback(const CTFeedBack &feedback);
+		virtual void receiveClockTailFeedback(const FeedBack &feedback);
 		virtual ClockTail getCurrentClockTail();
 		virtual void deinitialise();
 
@@ -62,6 +64,7 @@ class ClockTailGenerator : public CTModelIface
 		std::vector<CTObserver *> observers;
 		ClockTail currentClockTail;
 		Selector &ctSelector;
+		History &ctHistory;
 };
 
 #endif

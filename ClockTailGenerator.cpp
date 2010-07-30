@@ -22,8 +22,8 @@
 #include "ClockTail.hpp"
 #include "Selector.hpp"
 
-ClockTailGenerator::ClockTailGenerator(Selector &selector)
-	: ctSelector(selector)
+ClockTailGenerator::ClockTailGenerator(Selector &selector, History &history)
+	: ctSelector(selector), ctHistory(history)
 {
 }
 
@@ -33,7 +33,8 @@ ClockTailGenerator::ClockTailGenerator(const ClockTailGenerator &rhs)
 		nameFiles(rhs.nameFiles), 
 		observers(rhs.observers), 
 		currentClockTail(rhs.currentClockTail), 
-		ctSelector(rhs.ctSelector)
+		ctSelector(rhs.ctSelector),
+		ctHistory(rhs.ctHistory)
 {
 }
 
@@ -52,6 +53,7 @@ ClockTailGenerator &ClockTailGenerator::operator=(const ClockTailGenerator &rhs)
 		this->observers = rhs.observers;
 		this->currentClockTail = rhs.currentClockTail;
 		this->ctSelector = rhs.ctSelector;
+		this->ctHistory = rhs.ctHistory;
 	}
 
 	return *this;
@@ -80,8 +82,9 @@ void ClockTailGenerator::generateNextClockTail()
 	notifyObservers();
 }
 
-void ClockTailGenerator::receiveClockTailFeedback(const CTFeedBack &feedback)
+void ClockTailGenerator::receiveClockTailFeedback(const FeedBack &feedback)
 {
+	ctHistory.recordGeneratedClockTail(currentClockTail, feedback);	
 }
 
 ClockTail ClockTailGenerator::getCurrentClockTail()
@@ -110,6 +113,7 @@ void ClockTailGenerator::addNameFile(InputFile &input)
 
 void ClockTailGenerator::print(std::ostream &str)
 {
+	ctSelector.print(str);
 }
 
 Selector &ClockTailGenerator::getSelector()

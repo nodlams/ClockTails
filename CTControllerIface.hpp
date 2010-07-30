@@ -18,7 +18,7 @@
 #ifndef __CTCONTROLLERIFACE_HPP__
 #define __CTCONTROLLERIFACE_HPP__
 
-class CTFeedBack;
+class FeedBack;
 
 class CTControllerIface
 {
@@ -26,7 +26,7 @@ class CTControllerIface
 		virtual ~CTControllerIface(){}
 
 		virtual void generateClockTail()=0;
-		virtual void sendCTFeedBack(const CTFeedBack &feedback)=0;
+		virtual void sendCTFeedBack(const FeedBack &feedback)=0;
 		virtual void exit()=0;
 };
 

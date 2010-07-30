@@ -34,16 +34,13 @@ class FeedBack
 {
 	public:
 		FeedBack();
-		FeedBack(const FeedBack &rhs);
 		virtual ~FeedBack();
-
-		FeedBack &operator=(const FeedBack &rhs);
 
 		/*
 		 * Get the feedback score
 		 * @return the score between worst (0) and best (10)
 		 */
-		unsigned int getScore();
+		unsigned int getScore() const;
 		/**
 		 * Set the feedback score
 		 * @param score the feedback score, should be between 0 (worst score) and 10 (best score).

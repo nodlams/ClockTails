@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-class CTFeedBack;
+class FeedBack;
 class CTObserver;
 class ClockTail;
 
@@ -36,7 +36,7 @@ class CTModelIface
 		//ask the model to generate a new clocktail
 		virtual void generateNextClockTail()=0;
 		//take feedback regarding the current clocktail. 
-		virtual void receiveClockTailFeedback(const CTFeedBack &feedback)=0;
+		virtual void receiveClockTailFeedback(const FeedBack &feedback)=0;
 		//return the clocktail that was just generate, or generate one and
 		//return if there is no current clocktail.
 		virtual ClockTail getCurrentClockTail()=0;

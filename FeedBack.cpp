@@ -24,38 +24,22 @@ FeedBack::FeedBack()
 {
 }
 
-FeedBack::FeedBack(const FeedBack &rhs)
-	: score(rhs.score)
-{
-}
-
 FeedBack::~FeedBack()
 {
 }
 
-FeedBack &FeedBack::operator=(const FeedBack &rhs)
-{
-	FeedBack tmp(rhs);
-
-	if (&rhs != this)
-	{
-		std::swap(this->score, tmp.score);	
-	}
-	return *this;
-}
-
-unsigned int FeedBack::getScore()
+unsigned int FeedBack::getScore() const
 {
 	return score;
 }
 
-void FeedBack::setScore(const unsigned int score)
+void FeedBack::setScore(const unsigned int newScore)
 {
-	if (score > 10)
+	if (newScore > 10)
 	{
 		std::ostringstream str;
 		str << score;
 		throw InvalidScoreException(str.str());
 	}
-	this->score = score;
+	this->score = newScore;
 }

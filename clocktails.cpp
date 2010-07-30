@@ -144,8 +144,10 @@ int main(int argc, char **argv)
 
 	History hist;
 	SelectorRandom rs(hist);
-	std::auto_ptr<CTModelIface> model(new ClockTailGenerator(rs));
-	ClockTailGenerator *ctgenPtr = dynamic_cast<ClockTailGenerator *>(model.get());
+
+	ClockTailGenerator *ctgenPtr = new ClockTailGenerator(rs,hist);
+	std::auto_ptr<CTModelIface> model(ctgenPtr);
+
 	bool filesOk = checkFilesAndAddToModel(vm,ctgenPtr);
 	if (!filesOk)
 	{

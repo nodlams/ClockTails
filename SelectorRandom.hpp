@@ -36,7 +36,7 @@ class SelectorRandom : public Selector
 
 		virtual ClockTail generateClockTail(const std::vector<InputFile> &nameFiles, const std::vector<InputFile> &mixers, const std::vector<InputFile> &spirits);
 
-		virtual void print(std::ostream &out);
+		virtual void print(std::ostream &out) const;
 
 	protected:
 		virtual std::string getRandomLine(const InputFile &input);

@@ -89,7 +89,7 @@ ClockTail SelectorRandom::generateClockTail(const std::vector<InputFile> &nameFi
 	return nextOne;
 }
 
-void SelectorRandom::print(std::ostream &out)
+void SelectorRandom::print(std::ostream &out) const
 {
-
+	out << "Random ClockTail Generator";
 }

@@ -23,6 +23,7 @@
 #include "TextView.hpp"
 
 class CTModelIface;
+class FeedBack;
 
 class CTController : public CTControllerIface
 {
@@ -34,7 +35,7 @@ class CTController : public CTControllerIface
 		CTController &operator=(const CTController &rhs);
 
 		virtual void generateClockTail();
-		virtual void sendCTFeedBack(const CTFeedBack &feedback);
+		virtual void sendCTFeedBack(const FeedBack &feedback);
 		virtual void exit();
 
 	private:

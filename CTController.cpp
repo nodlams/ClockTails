@@ -55,9 +55,9 @@ void CTController::generateClockTail()
 	model.generateNextClockTail();
 }
 
-void CTController::sendCTFeedBack(const CTFeedBack &feedback)
+void CTController::sendCTFeedBack(const FeedBack &feedback)
 {
-
+	model.receiveClockTailFeedback(feedback);
 }
 
 void CTController::exit()

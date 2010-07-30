@@ -32,12 +32,27 @@ class ClockTail;
 
 #include <string>
 #include <list>
+#include <stdexcept>
+
+/*
+ * General exception for the TextView, the message passed as the "what"
+ * parameter will be displayed to the user.
+ */
+class DisplayException : public std::runtime_error
+{
+	public:
+		DisplayException(const std::string &what)
+			: std::runtime_error(what)
+		{ }
+};
 
 class TextView : public CTObserver
 {
 	public:
 		static const std::string GENERATEN;
 		static const std::string QUITN;
+		static const std::string FEEDBACKN;
+
 		//store this many of the previously generated clocktails
 		static const size_t STOREDCTCOUNT=10;
 
@@ -59,6 +74,7 @@ class TextView : public CTObserver
 
 	private:
 		virtual void printGeneratorInfo(std::ostream &stream);
+		virtual FeedBack getUserFeedBack(std::istream &in, std::ostream &out);
 		
 		/**
 		 * Print the menu to the supplied stream
@@ -74,6 +90,7 @@ class TextView : public CTObserver
 		 * @param the clocktail to print
 		 */
 		virtual void printClockTail(std::ostream &output, ClockTail &clocktail);
+		virtual void printClockTail(std::ostream &output, ClockTail &clocktail, FeedBack &feedback);
 
 		/**
 		 * Print the clock tails in the history
@@ -102,8 +119,11 @@ class TextView : public CTObserver
 
 		/**
 		 * Handle a menu selection, and perform the appropriate action.
+		 * @param item the menu item which is to be handled
+		 * @in the input stream, used to read input from the user.
+		 * @out the output stream, used to output text to the user.
 		 */
-		virtual void handleSelection(MenuBase::MenuBasePtr item);
+		virtual void handleSelection(MenuBase::MenuBasePtr item, std::istream &in, std::ostream &out);
 
 		/**
 		 * Update the list of the last 3 clocktails generated.
@@ -129,6 +149,7 @@ class TextView : public CTObserver
 		MenuBase::MenuBasePtr currentMenu;
 
 		std::list<ClockTail> lastNClockTails;
+		std::list<FeedBack> lastNFeedBacks;
 };
 
 #endif
