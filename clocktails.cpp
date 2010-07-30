@@ -19,9 +19,12 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "RandomClockTailGenerator.hpp"
 #include "CTController.hpp"
 #include "MenuStructure.hpp"
+#include "ClockTailGenerator.hpp"
+#include "History.hpp"
+#include "SelectorRandom.hpp"
+
 #include <memory>
 #include <boost/program_options.hpp>
 
@@ -139,7 +142,9 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	std::auto_ptr<CTModelIface> model(new RandomClockTailGenerator());
+	History hist;
+	SelectorRandom rs(hist);
+	std::auto_ptr<CTModelIface> model(new ClockTailGenerator(rs));
 	ClockTailGenerator *ctgenPtr = dynamic_cast<ClockTailGenerator *>(model.get());
 	bool filesOk = checkFilesAndAddToModel(vm,ctgenPtr);
 	if (!filesOk)

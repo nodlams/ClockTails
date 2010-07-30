@@ -58,6 +58,21 @@ void ClockTail::addNameComponent(const std::string &name)
 	namecomponents.push_back(name);
 }
 
+void ClockTail::setMixers(const std::vector<std::string> &mixers)
+{
+	this->mixers = mixers;	
+}
+
+void ClockTail::setSpirits(const std::vector<std::string> &spirits)
+{
+	this->spirits = spirits;
+}
+
+void ClockTail::setNameComponents(const std::vector<std::string> &names)
+{
+	this->namecomponents = names;
+}
+
 const std::vector<std::string> &ClockTail::getMixers()
 {
 	return mixers;

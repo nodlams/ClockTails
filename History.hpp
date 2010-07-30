@@ -21,7 +21,15 @@
  * =====================================================================================
  */
 
+#ifndef __HISTORY_HPP__
+#define __HISTORY_HPP__
+
 #include <unordered_map>
+#include <vector>
+#include <string>
+
+#include "ClockTail.hpp"
+#include "FeedBack.hpp"
 
 class History
 {
@@ -29,15 +37,31 @@ class History
 		History();
 		virtual ~History();	
 
-		//use these methods to check whether a name or recipe has been generated already
-		bool nameHasBeenGenerated(const std::vector<std::string> &nameComponents);
-		bool recipeHasBeenGenerated(const std::vector<std::string> &mixers,
-									const std::vector<std::string> &spirits);
+		/**
+		 * Query the history to determine if a name has been generated already.
+		 * @param nameComponents the strings making up the name.
+		 * @return true if the name has been used before, false if it hasn't.
+		 */
+		bool nameHasBeenGenerated(const std::vector<std::string> &nameComponents) const;
 
-		void recordGeneratedClockTail(const ClockTail &clockTail, RecipeFeedback feedback=RecipeFeedback());
+		/**
+		 * Query the history to determine if the recipe has been generated before or not.
+		 * @param mixers The mixers going into the clocktail.
+		 * @param spirits The spirits going int the clocktail.
+		 */
+		bool recipeHasBeenGenerated(const std::vector<std::string> &mixers,
+					    const std::vector<std::string> &spirits) const;
+		/**
+		 * Record feedback for a clocktail.
+		 *
+		 * @param clockTail The clocktail which feedback will be generated for.
+		 * @param feedback The feedback for the clocktail.
+		 */
+		void recordGeneratedClockTail(const ClockTail &clockTail, const FeedBack &feedback);
 
 	private:
-		std::tr1::unordered_map<string, RecipeFeedback> recipeHistory;	
-		std::tr1::unordered_map<string, NameFeedback> nameHistory;
-
+		std::unordered_map<std::string, FeedBack> recipeHistory;	
+		std::unordered_map<std::string, FeedBack> nameHistory;
 };
+
+#endif

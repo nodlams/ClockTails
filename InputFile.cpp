@@ -49,12 +49,12 @@ void InputFile::loadData(std::istream &input)
 	}
 }
 
-size_t InputFile::size()
+size_t InputFile::size() const
 {
 	return lines.size();
 }
 
-const std::string *InputFile::getLine(unsigned int index)
+const std::string *InputFile::getLine(unsigned int index) const
 {
 	if (index < size())
 	{
@@ -63,7 +63,7 @@ const std::string *InputFile::getLine(unsigned int index)
 	return NULL;
 }
 
-const std::vector<std::string> &InputFile::getLines()
+const std::vector<std::string> &InputFile::getLines() const
 {
 	return lines;
 }

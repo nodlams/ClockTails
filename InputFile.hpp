@@ -32,9 +32,9 @@ class InputFile
 
 		void loadData(std::istream &input);
 
-		size_t size();
-		const std::string *getLine(unsigned int index);
-		const std::vector<std::string> &getLines();
+		size_t size() const;
+		const std::string *getLine(unsigned int index) const;
+		const std::vector<std::string> &getLines() const;
 
 	private:
 		std::vector<std::string> lines;

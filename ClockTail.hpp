@@ -35,6 +35,10 @@ class ClockTail
 		void addSpirit(const std::string &spirit);
 		void addNameComponent(const std::string &name);
 
+		void setMixers(const std::vector<std::string> &mixers);
+		void setSpirits(const std::vector<std::string> &spirits);
+		void setNameComponents(const std::vector<std::string> &names);
+
 		const std::vector<std::string> &getMixers();
 		const std::vector<std::string> &getSpirits();
 		const std::vector<std::string> &getNameComponents();

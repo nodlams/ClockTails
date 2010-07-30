@@ -19,7 +19,7 @@
 #include "CTController.hpp"
 #include "TextView.hpp"
 #include "CTModelIface.hpp"
-#include "CTFeedBack.hpp"
+#include "FeedBack.hpp"
 
 CTController::CTController(CTModelIface &theModel)
 	: model(theModel), view(theModel, *this)

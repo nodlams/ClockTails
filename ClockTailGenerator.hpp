@@ -27,11 +27,12 @@
 
 class CTFeedBack;
 class CTObserver;
+class Selector;
 
 class ClockTailGenerator : public CTModelIface
 {
 	public:
-		ClockTailGenerator();
+		ClockTailGenerator(Selector &selector);
 		ClockTailGenerator(const ClockTailGenerator &rhs);
 		virtual ~ClockTailGenerator();
 
@@ -41,8 +42,10 @@ class ClockTailGenerator : public CTModelIface
 		virtual void registerObserver(CTObserver &observer);
 		//notify the observers that a new clocktail was generated
 		virtual void notifyObservers();
-		virtual void generateNextClockTail()=0;
-		virtual void print(std::ostream &out)=0;
+
+		virtual void generateNextClockTail();
+		virtual void print(std::ostream &out);
+
 		virtual void receiveClockTailFeedback(const CTFeedBack &feedback);
 		virtual ClockTail getCurrentClockTail();
 		virtual void deinitialise();
@@ -51,10 +54,14 @@ class ClockTailGenerator : public CTModelIface
 		virtual void addMixerFile(InputFile &input);
 		virtual void addNameFile(InputFile &input);
 
+		virtual void setSelector(Selector &selector);
+		virtual Selector &getSelector();
+
 	protected:
 		std::vector<InputFile> spiritFiles, mixerFiles, nameFiles;
 		std::vector<CTObserver *> observers;
 		ClockTail currentClockTail;
+		Selector &ctSelector;
 };
 
 #endif

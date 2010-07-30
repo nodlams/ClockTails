@@ -21,7 +21,7 @@
 
 #include <string>
 
-namespace __gnu_cxx                                                                                 
+namespace std
 {                                                                                             
   template<> struct hash< std::string >                                                       
   {                                                                                           
