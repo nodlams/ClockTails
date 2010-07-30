@@ -90,10 +90,11 @@ void TextView::startInputLoop()
 	bool quit=false;
 	while (!quit)
 	{
-		//clearScreen();
+		clearScreen();
 		printHeader(std::cout);
 		printGeneratorInfo(std::cout);
 		printClockTails(std::cout);
+		std::cout << std::endl;
 		printMenu(currentMenu, std::cout);
 
 		std::string input = getUserInput(std::cout, std::cin, "Enter Selection");
