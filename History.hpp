@@ -27,6 +27,8 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <cstring>
+#include <functional>
 
 #include "ClockTail.hpp"
 #include "FeedBack.hpp"
@@ -39,18 +41,16 @@ class History
 
 		/**
 		 * Query the history to determine if a name has been generated already.
-		 * @param nameComponents the strings making up the name.
+		 * @param clockTail the clocktail
 		 * @return true if the name has been used before, false if it hasn't.
 		 */
-		bool nameHasBeenGenerated(const std::vector<std::string> &nameComponents) const;
+		bool nameHasBeenGenerated(const ClockTail &clockTail) const;
 
 		/**
 		 * Query the history to determine if the recipe has been generated before or not.
-		 * @param mixers The mixers going into the clocktail.
-		 * @param spirits The spirits going int the clocktail.
+		 * @param clockTail The clockTail 
 		 */
-		bool recipeHasBeenGenerated(const std::vector<std::string> &mixers,
-					    const std::vector<std::string> &spirits) const;
+		bool recipeHasBeenGenerated(const ClockTail &clockTail) const;
 		/**
 		 * Record feedback for a clocktail.
 		 *
@@ -60,6 +60,16 @@ class History
 		void recordGeneratedClockTail(const ClockTail &clockTail, const FeedBack &feedback);
 
 	private:
+		//hash function for ClockTail object
+		struct ClockTailHash
+		{
+			size_t operator() (const ClockTail &clockTail) const
+			{
+				std::hash<std::string>  strhasher;
+				return strhasher(clockTail.getName());
+			}
+		};
+		std::unordered_map<ClockTail, FeedBack, ClockTailHash> clockTailFeedBack;
 		std::unordered_map<std::string, FeedBack> recipeHistory;	
 		std::unordered_map<std::string, FeedBack> nameHistory;
 };

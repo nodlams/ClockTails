@@ -38,12 +38,16 @@ class ClockTail
 		void setMixers(const std::vector<std::string> &mixers);
 		void setSpirits(const std::vector<std::string> &spirits);
 		void setNameComponents(const std::vector<std::string> &names);
+		
+		//get the name of the clocktail from the name components
+		std::string getName() const;
+		const std::vector<std::string> &getMixers() const;
+		const std::vector<std::string> &getSpirits() const;
 
-		const std::vector<std::string> &getMixers();
-		const std::vector<std::string> &getSpirits();
-		const std::vector<std::string> &getNameComponents();
+		void print(std::ostream &output) const;
 
-		void print(std::ostream &output);
+		bool operator==(const ClockTail &rhs) const;
+		bool operator!=(const ClockTail &rhs) const;
 		
 	private:
 		std::vector<std::string> namecomponents;

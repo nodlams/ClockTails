@@ -22,6 +22,7 @@
 #include "ClockTail.hpp"
 #include <iostream>
 #include <sstream>
+#include <iterator>
 #include <stdlib.h>
 
 const std::string TextView::GENERATEN = "Generate";
@@ -189,19 +190,23 @@ void TextView::printClockTail(std::ostream &output, ClockTail &clocktail)
 {
 	const std::vector<std::string> &mixers = clocktail.getMixers();
 	const std::vector<std::string> &spirits = clocktail.getSpirits();
-	const std::vector<std::string> &names = clocktail.getNameComponents();
 	
 	std::ostringstream nameAcc;
+	nameAcc << clocktail.getName();
 
-	for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it)
-		nameAcc << (*it) << " ";  
 	nameAcc << ": ";
-	for (std::vector<std::string>::const_iterator it = spirits.begin(); it != spirits.end(); ++it)
-		nameAcc << (*it) << ", ";
-	for (std::vector<std::string>::const_iterator it = mixers.begin(); it != mixers.end(); ++it)
-		nameAcc << (*it) << ", ";
+	copy(spirits.begin(), spirits.end(), std::ostream_iterator<std::string>(nameAcc, ", "));
+	copy(mixers.begin(), mixers.end(), std::ostream_iterator<std::string>(nameAcc, ", "));
+	
+	//cut off the last ", "
+	std::string tmpName = nameAcc.str();
 
-	output << nameAcc.str();
+	if (tmpName.length() > 2)
+	{
+		tmpName = tmpName.substr(0, tmpName.length()-2);	
+	}
+	
+	output << tmpName;
 }
 
 void TextView::printClockTail(std::ostream &output, ClockTail &clocktail, FeedBack &feedback)

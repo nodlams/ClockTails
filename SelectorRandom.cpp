@@ -53,13 +53,15 @@ ClockTail SelectorRandom::generateClockTail(const std::vector<InputFile> &nameFi
 
 	do
 	{
+		nextOne = ClockTail();
 		nameBits.clear();
 		for (std::vector<InputFile>::const_iterator it = nameFiles.begin(); it != nameFiles.end(); ++it)
 		{
 			std::string nameComponent = getRandomLine(*it);
 			nameBits.push_back(nameComponent);
 		}
-	} while (history.nameHasBeenGenerated(nameBits));
+		nextOne.setNameComponents(nameBits);
+	} while (history.nameHasBeenGenerated(nextOne));
 
 	std::vector<std::string> chosenMixers;
 	std::vector<std::string> chosenSpirits;
@@ -68,6 +70,7 @@ ClockTail SelectorRandom::generateClockTail(const std::vector<InputFile> &nameFi
 	{
 		chosenMixers.clear();
 		chosenSpirits.clear();
+		nextOne = ClockTail();
 
 		for (std::vector<InputFile>::const_iterator it = mixerFiles.begin(); it != mixerFiles.end(); ++it)
 		{
@@ -79,8 +82,11 @@ ClockTail SelectorRandom::generateClockTail(const std::vector<InputFile> &nameFi
 			std::string spirit = getRandomLine(*it);
 			chosenSpirits.push_back(spirit);
 		}
+		nextOne.setNameComponents(nameBits);
+		nextOne.setMixers(chosenMixers);
+		nextOne.setSpirits(chosenSpirits);
 
-	} while (history.recipeHasBeenGenerated(chosenMixers, chosenSpirits));
+	} while (history.recipeHasBeenGenerated(nextOne));
 
 	nextOne.setNameComponents(nameBits);
 	nextOne.setMixers(chosenMixers);

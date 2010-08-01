@@ -27,17 +27,17 @@ History::~History()
 {
 }
 
-bool History::nameHasBeenGenerated(const std::vector<std::string> &nameComponents) const
+bool History::nameHasBeenGenerated(const ClockTail &clockTail) const
 {
-	return false;
+	return clockTailFeedBack.count(clockTail) > 0;
 }
 
-bool History::recipeHasBeenGenerated(const std::vector<std::string> &mixers, 
-				     const std::vector<std::string> &spirits) const
+bool History::recipeHasBeenGenerated(const ClockTail &clockTail) const
 {
 	return false;
 }
 
 void History::recordGeneratedClockTail(const ClockTail &clockTail, const FeedBack &feedback)
 {
+	clockTailFeedBack[clockTail] = feedback;
 }

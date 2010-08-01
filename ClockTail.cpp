@@ -16,6 +16,8 @@
  * =====================================================================================
  */
 
+#include <sstream>
+#include <iterator>
 #include "ClockTail.hpp"
 
 ClockTail::ClockTail()
@@ -73,17 +75,35 @@ void ClockTail::setNameComponents(const std::vector<std::string> &names)
 	this->namecomponents = names;
 }
 
-const std::vector<std::string> &ClockTail::getMixers()
+const std::vector<std::string> &ClockTail::getMixers() const
 {
 	return mixers;
 }
 
-const std::vector<std::string> &ClockTail::getSpirits()
+const std::vector<std::string> &ClockTail::getSpirits() const
 {
 	return spirits;
 }
 
-const std::vector<std::string> &ClockTail::getNameComponents()
+std::string ClockTail::getName() const
 {
-	return namecomponents;
+	if (namecomponents.size() > 0)
+	{
+		std::ostringstream oss;
+		copy(namecomponents.begin(), namecomponents.end(), std::ostream_iterator<std::string>(oss, " "));	
+		std::string tmpName = oss.str();
+		//chop off that last space from the name
+		return tmpName.substr(0, tmpName.length()-2);
+	}
+	return std::string("");
+}
+
+bool ClockTail::operator==(const ClockTail &rhs) const
+{
+	return this->getName() == rhs.getName();
+}
+
+bool ClockTail::operator!=(const ClockTail &rhs) const
+{
+	return !(*this == rhs);
 }
