@@ -22,6 +22,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 AUX_SOURCE_DIRECTORY(. SOURCES)
+#add testing sub directory
+SUBDIRS(tests)
 
 add_executable(clocktails ${SOURCES})
 target_link_libraries(clocktails boost_program_options)
+
+ENABLE_TESTING()
+
+ADD_TEST(Test0 "${ExecutableOutputPath}/tests/TestCombinationSet" "0")

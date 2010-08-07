@@ -20,82 +20,61 @@
 #include <ctime>
 #include <cstdlib>
 
-SelectorRandom::SelectorRandom(const History &theHistory)
-	: history(theHistory),seed((unsigned int)time(0))
+using namespace std;
+
+SelectorRandom::SelectorRandom()
+	: seed((unsigned int)time(0))
 {
 	srand(seed);
 }
 
-SelectorRandom::SelectorRandom(const History &theHistory, const unsigned int theSeed)
-	: history(theHistory), seed(theSeed)
+SelectorRandom::SelectorRandom(const unsigned int theSeed)
+	: seed(theSeed)
 {
 	srand(seed);
 }
 
-std::string SelectorRandom::getRandomLine(const InputFile &input)
+ClockTail SelectorRandom::generateClockTail()
 {
-	unsigned int range = input.size();
-	std::string ret("Not Found!");
-	if (range > 0)
-	{
-		unsigned int rangedRandom = (unsigned int)(double(range) * (double(rand()) / double(RAND_MAX)));
-		ret = *input.getLine(rangedRandom);
-	}
-	return ret;
-}
+	CombinationSet::CombinationIterator nameIt = nameCombinations.begin();	
+	CombinationSet::CombinationIterator drinkIt = drinkCombinations.begin()
 
-ClockTail SelectorRandom::generateClockTail(const std::vector<InputFile> &nameFiles, const std::vector<InputFile> &mixerFiles, const std::vector<InputFile> &spiritFiles)
-{
-	//TODO: This could loop indefinitely if all the names or recipes have been used.
-	ClockTail nextOne;
+	ClockTail nextOne;	
 
-	std::vector<std::string> nameBits;
-
-	do
-	{
-		nextOne = ClockTail();
-		nameBits.clear();
-		for (std::vector<InputFile>::const_iterator it = nameFiles.begin(); it != nameFiles.end(); ++it)
-		{
-			std::string nameComponent = getRandomLine(*it);
-			nameBits.push_back(nameComponent);
-		}
-		nextOne.setNameComponents(nameBits);
-	} while (history.nameHasBeenGenerated(nextOne));
-
-	std::vector<std::string> chosenMixers;
-	std::vector<std::string> chosenSpirits;
-
-	do 
-	{
-		chosenMixers.clear();
-		chosenSpirits.clear();
-		nextOne = ClockTail();
-
-		for (std::vector<InputFile>::const_iterator it = mixerFiles.begin(); it != mixerFiles.end(); ++it)
-		{
-			std::string mixer = getRandomLine(*it);
-			chosenMixers.push_back(mixer);
-		}
-		for (std::vector<InputFile>::const_iterator it = spiritFiles.begin(); it != spiritFiles.end(); ++it)
-		{
-			std::string spirit = getRandomLine(*it);
-			chosenSpirits.push_back(spirit);
-		}
-		nextOne.setNameComponents(nameBits);
-		nextOne.setMixers(chosenMixers);
-		nextOne.setSpirits(chosenSpirits);
-
-	} while (history.recipeHasBeenGenerated(nextOne));
-
-	nextOne.setNameComponents(nameBits);
-	nextOne.setMixers(chosenMixers);
-	nextOne.setSpirits(chosenSpirits);
+	nextOne.setNameComponents(*nameIt);
+	
+	nameCombinations.erase(nameIt);	
+	drinkCombinations.erase(drinkIt);
 
 	return nextOne;
 }
 
-void SelectorRandom::print(std::ostream &out) const
+void SelectorRandom::print(ostream &out) const
 {
 	out << "Random ClockTail Generator";
+}
+
+void SelectorRandom::setNameFiles(const vector<InputFile> &nameFiles)
+{
+	CombinationSet::StringSets sets;
+	for (vector<InputFile>::const_iterator it = nameFiles.begin(); it != nameFiles.end(); ++it)
+	{
+		sets.push_back((*it).getLines());	
+	}
+	nameCombinations.setStringSets(sets);	
+}
+
+void SelectorRandom::setDrinkFiles(const vector<InputFile> &mixerFiles, const vector<InputFile> &spiritFiles)
+{
+	CombinationSet::StringSets sets;
+	for (vector<InputFile>::const_iterator it = mixerFiles.begin(); it != mixerFiles.end(); ++it)
+	{
+		sets.push_back((*it).getLines());	
+	}
+	for (vector<InputFile>::const_iterator it = spiritFiles.begin(); it != spiritFiles.end(); ++it)
+	{
+		sets.push_back((*it).getLines());	
+	}
+
+	drinkCombinations.setStringSets(sets);
 }

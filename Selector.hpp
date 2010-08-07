@@ -30,7 +30,7 @@ class Selector
 {
 	public:
 		Selector();
-		virtual ClockTail generateClockTail(const std::vector<InputFile> &names, const std::vector<InputFile> &mixers, const std::vector<InputFile> &spirits)=0;
+		virtual ClockTail generateClockTail()=0;
 		virtual void print(std::ostream &out) const=0;
 
 	protected:

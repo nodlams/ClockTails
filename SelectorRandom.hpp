@@ -24,6 +24,7 @@
 #include "Selector.hpp"
 #include "InputFile.hpp"
 #include "History.hpp"
+#include "CombinationSet.hpp"
 
 #include <string>
 #include <vector>
@@ -31,17 +32,22 @@
 class SelectorRandom : public Selector
 {
 	public:
-		SelectorRandom(const History &history);
-		SelectorRandom(const History &history, const unsigned int seed);
+		SelectorRandom();
+		SelectorRandom(const unsigned int seed);
 
-		virtual ClockTail generateClockTail(const std::vector<InputFile> &nameFiles, const std::vector<InputFile> &mixers, const std::vector<InputFile> &spirits);
+		virtual ClockTail generateClockTail();
 
 		virtual void print(std::ostream &out) const;
+
+		void setNameFiles(const std::vector<InputFile> &nameFiles);
+		void setDrinksFiles(const std::vector<InputFile> &mixerFiles, const std::vector<InputFile> &spiritFiles);
 
 	protected:
 		virtual std::string getRandomLine(const InputFile &input);
 
-		const History &history;
+		CombinationSet nameCombinations;
+		CombinationSet drinkCombinations;
+
 		const unsigned int seed;
 };
 

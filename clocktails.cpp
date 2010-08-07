@@ -143,8 +143,10 @@ int main(int argc, char **argv)
 	}
 
 	History hist;
-	SelectorRandom rs(hist);
+	SelectorRandom rs;
 
+	//TODO: Need to work out a way to get around the problem of passing in the name strings to the generator and the model.
+	//actually thinking about it, there's no need for the model to know anything about the clocktail strings, they should just go to the generator.
 	ClockTailGenerator *ctgenPtr = new ClockTailGenerator(rs,hist);
 	std::auto_ptr<CTModelIface> model(ctgenPtr);
 

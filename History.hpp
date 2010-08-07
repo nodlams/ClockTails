@@ -40,18 +40,6 @@ class History
 		virtual ~History();	
 
 		/**
-		 * Query the history to determine if a name has been generated already.
-		 * @param clockTail the clocktail
-		 * @return true if the name has been used before, false if it hasn't.
-		 */
-		bool nameHasBeenGenerated(const ClockTail &clockTail) const;
-
-		/**
-		 * Query the history to determine if the recipe has been generated before or not.
-		 * @param clockTail The clockTail 
-		 */
-		bool recipeHasBeenGenerated(const ClockTail &clockTail) const;
-		/**
 		 * Record feedback for a clocktail.
 		 *
 		 * @param clockTail The clocktail which feedback will be generated for.
@@ -70,8 +58,6 @@ class History
 			}
 		};
 		std::unordered_map<ClockTail, FeedBack, ClockTailHash> clockTailFeedBack;
-		std::unordered_map<std::string, FeedBack> recipeHistory;	
-		std::unordered_map<std::string, FeedBack> nameHistory;
 };
 
 #endif

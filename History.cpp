@@ -27,7 +27,7 @@ History::~History()
 {
 }
 
-bool History::nameHasBeenGenerated(const ClockTail &clockTail) const
+/*bool History::nameHasBeenGenerated(const ClockTail &clockTail) const
 {
 	return clockTailFeedBack.count(clockTail) > 0;
 }
@@ -35,7 +35,7 @@ bool History::nameHasBeenGenerated(const ClockTail &clockTail) const
 bool History::recipeHasBeenGenerated(const ClockTail &clockTail) const
 {
 	return false;
-}
+}*/
 
 void History::recordGeneratedClockTail(const ClockTail &clockTail, const FeedBack &feedback)
 {
