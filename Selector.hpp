@@ -23,14 +23,24 @@
 
 #include <string>
 #include <vector>
+#include <stdexcept>
+
 #include "InputFile.hpp"
 #include "ClockTail.hpp"
+
+class SelectorException : public runtime_error
+{
+	public:
+		SelectorException(const char *what)
+			: runtime_error(what) {}
+		virtual ~SelectorException () throw () {}
+};
 
 class Selector
 {
 	public:
 		Selector();
-		virtual ClockTail generateClockTail()=0;
+		virtual ClockTail generateClockTail()=0; //throw SelectorException
 		virtual void print(std::ostream &out) const=0;
 
 	protected:

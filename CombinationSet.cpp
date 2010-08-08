@@ -62,7 +62,7 @@ list<CombinationSet::Combination>::size_type CombinationSet::size() const
 
 CombinationSet::Combination CombinationSet::generateCombination(const vector<StringSet::iterator> &strSetIts)
 {
-	vector<string> ret;
+	vector<Combinable *> ret;
 	for (vector<StringSet::iterator>::const_iterator it = strSetIts.begin(); it != strSetIts.end(); ++it)
 		ret.push_back(**it);
 	return ret;

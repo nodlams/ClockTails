@@ -31,8 +31,23 @@ class FeedBack;
 class CTObserver;
 class Selector;
 
+using namespace std;
+
+class GenerateException : public runtime_error
+{
+	public:
+		GenerateException(const char *what)
+			: runtime_error(what) {}
+		virtual ~GenerateException() throw () {}
+};
+
 class ClockTailGenerator : public CTModelIface
 {
+	public:
+		typedef vector<Mixer> MixerSet;
+		typedef vector<Name> NameSet;
+		typedef vector<Spirit> SpiritSet;
+
 	public:
 		ClockTailGenerator(Selector &selector, History &history);
 		ClockTailGenerator(const ClockTailGenerator &rhs);
@@ -45,8 +60,8 @@ class ClockTailGenerator : public CTModelIface
 		//notify the observers that a new clocktail was generated
 		virtual void notifyObservers();
 
-		virtual void generateNextClockTail();
-		virtual void print(std::ostream &out);
+		virtual void generateNextClockTail(); //throw GenerateException
+		virtual void print(ostream &out);
 
 		virtual void receiveClockTailFeedback(const FeedBack &feedback);
 		virtual ClockTail getCurrentClockTail();
@@ -60,8 +75,8 @@ class ClockTailGenerator : public CTModelIface
 		virtual Selector &getSelector();
 
 	protected:
-		std::vector<InputFile> spiritFiles, mixerFiles, nameFiles;
-		std::vector<CTObserver *> observers;
+		vector<InputFile> spiritFiles, mixerFiles, nameFiles;
+		vector<CTObserver *> observers;
 		ClockTail currentClockTail;
 		Selector &ctSelector;
 		History &ctHistory;

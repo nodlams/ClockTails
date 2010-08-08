@@ -36,12 +36,26 @@ SelectorRandom::SelectorRandom(const unsigned int theSeed)
 
 ClockTail SelectorRandom::generateClockTail()
 {
+	if (nameCombinations.size() == 0)
+		throw SelectorException("Unique names exhausted, please add more strings to the Names file(s)");
+	if (drinkCombinations.size() == 0)
+		throw SelectorException("Unique drink combinations exhausted, please add more strings to the spirits/mixer files");
+
 	CombinationSet::CombinationIterator nameIt = nameCombinations.begin();	
-	CombinationSet::CombinationIterator drinkIt = drinkCombinations.begin()
+	CombinationSet::CombinationIterator drinkIt = drinkCombinations.begin();
+
+	CombinationSet::Combination &nameCombi = *nameIt;
+	//convert the combinations to a set of names
+	vector<Name> nameSet;
+	for (CombinationSet::Combination::iterator it = nameCombi.begin(); it != nameCombi.end(); ++it)
+	{
+		Combinable *nameAsCombinable = (*it);
+		Name *name = dynamic_cast<Name*>(nameAsCombinable);
+		nameSet.push_back(*name);
+	}
 
 	ClockTail nextOne;	
-
-	nextOne.setNameComponents(*nameIt);
+	nextOne.setNameComponents(nameSet);
 	
 	nameCombinations.erase(nameIt);	
 	drinkCombinations.erase(drinkIt);
@@ -54,27 +68,13 @@ void SelectorRandom::print(ostream &out) const
 	out << "Random ClockTail Generator";
 }
 
-void SelectorRandom::setNameFiles(const vector<InputFile> &nameFiles)
+void SelectorRandom::setComponents(Names &names, Mixers &mixers, Spirits &spirits)
 {
-	CombinationSet::StringSets sets;
-	for (vector<InputFile>::const_iterator it = nameFiles.begin(); it != nameFiles.end(); ++it)
+	/*CombinationSet::StringSets sets;
+	for (vector<InputFile>::const_iterator it = names.begin(); it != names.end(); ++it)
 	{
 		sets.push_back((*it).getLines());	
 	}
-	nameCombinations.setStringSets(sets);	
+	nameCombinations.setStringSets(sets);	*/
 }
 
-void SelectorRandom::setDrinkFiles(const vector<InputFile> &mixerFiles, const vector<InputFile> &spiritFiles)
-{
-	CombinationSet::StringSets sets;
-	for (vector<InputFile>::const_iterator it = mixerFiles.begin(); it != mixerFiles.end(); ++it)
-	{
-		sets.push_back((*it).getLines());	
-	}
-	for (vector<InputFile>::const_iterator it = spiritFiles.begin(); it != spiritFiles.end(); ++it)
-	{
-		sets.push_back((*it).getLines());	
-	}
-
-	drinkCombinations.setStringSets(sets);
-}

@@ -19,6 +19,7 @@
 #include <sstream>
 #include <iterator>
 #include "ClockTail.hpp"
+#include "ClockTailComponents.hpp"
 
 ClockTail::ClockTail()
 {
@@ -45,62 +46,63 @@ ClockTail &ClockTail::operator=(const ClockTail &rhs)
 	return *this;
 }
 
-void ClockTail::addMixer(const std::string &mixer)
+void ClockTail::addMixer(const Mixer &mixer)
 {
 	mixers.push_back(mixer);
 }
 
-void ClockTail::addSpirit(const std::string &spirit)
+void ClockTail::addSpirit(const Spirit &spirit)
 {
 	spirits.push_back(spirit);
 }
 
-void ClockTail::addNameComponent(const std::string &name)
+void ClockTail::addNameComponent(const Name &name)
 {
 	namecomponents.push_back(name);
 }
 
-void ClockTail::setMixers(const std::vector<std::string> &mixers)
+void ClockTail::setMixers(const vector<Mixer> &mixers)
 {
 	this->mixers = mixers;	
 }
 
-void ClockTail::setSpirits(const std::vector<std::string> &spirits)
+void ClockTail::setSpirits(const vector<Spirit> &spirits)
 {
 	this->spirits = spirits;
 }
 
-void ClockTail::setNameComponents(const std::vector<std::string> &names)
+void ClockTail::setNameComponents(const vector<Name> &names)
 {
 	this->namecomponents = names;
 }
 
-const std::vector<std::string> &ClockTail::getMixers() const
+const vector<Mixer> &ClockTail::getMixers() const
 {
 	return mixers;
 }
 
-const std::vector<std::string> &ClockTail::getSpirits() const
+const vector<Spirit> &ClockTail::getSpirits() const
 {
 	return spirits;
 }
 
-std::string ClockTail::getName() const
+Name ClockTail::getName() const
 {
 	if (namecomponents.size() > 0)
 	{
-		std::ostringstream oss;
-		copy(namecomponents.begin(), namecomponents.end(), std::ostream_iterator<std::string>(oss, " "));	
-		std::string tmpName = oss.str();
+		ostringstream oss;
+		for (vector<Name>::const_iterator it = namecomponents.begin(); it != namecomponents.end(); ++it)
+			oss << (*it).getValue() << " ";
+		string tmpName = oss.str();
 		//chop off that last space from the name
 		return tmpName.substr(0, tmpName.length()-2);
 	}
-	return std::string("");
+	return string("");
 }
 
 bool ClockTail::operator==(const ClockTail &rhs) const
 {
-	return this->getName() == rhs.getName();
+	return this->getName().getValue() == rhs.getName().getValue();
 }
 
 bool ClockTail::operator!=(const ClockTail &rhs) const

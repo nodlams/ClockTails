@@ -20,14 +20,16 @@
 #include "CTModelIface.hpp"
 #include "CTControllerIface.hpp"
 #include "ClockTail.hpp"
+#include "ClockTailGenerator.hpp"
 #include <iostream>
 #include <sstream>
 #include <iterator>
 #include <stdlib.h>
 
-const std::string TextView::GENERATEN = "Generate";
-const std::string TextView::QUITN = "Quit";
-const std::string TextView::FEEDBACKN = "Rate";
+using namespace std;
+const string TextView::GENERATEN = "Generate";
+const string TextView::QUITN = "Quit";
+const string TextView::FEEDBACKN = "Rate";
 
 TextView::TextView(CTModelIface &theModel, CTControllerIface &theController)
 	: model(theModel), controller(theController), menu(initMenus()), currentMenu(menu)
@@ -60,13 +62,13 @@ TextView &TextView::operator=(const TextView &rhs)
 	return *this;
 }
 
-void TextView::handleSelection(MenuBase::MenuBasePtr item, std::istream &in, std::ostream &out)
+void TextView::handleSelection(MenuBase::MenuBasePtr item, istream &in, ostream &out)
 {
 	MenuItem *itemp = dynamic_cast<MenuItem *>(item.get());
 	if (itemp != NULL)
 	{
 		//it's an item.
-		const std::string itemName = item->getName();
+		const string itemName = item->getName();
 		if (itemName == GENERATEN)
 		{
 			//send feedback for the last clocktail, if there is one.
@@ -108,31 +110,45 @@ void TextView::startInputLoop()
 		try
 		{
 			clearScreen();
-			printHeader(std::cout);
-			printGeneratorInfo(std::cout);
-			std::cout << std::endl;
-			printClockTails(std::cout);
-			std::cout << std::endl;
-			printMenu(currentMenu, std::cout);
+			printHeader(cout);
+			printGeneratorInfo(cout);
+			cout << endl;
+			printClockTails(cout);
+			cout << endl;
+			printMenu(currentMenu, cout);
 
-			std::string input = getUserInput(std::cout, std::cin, "Enter Selection");
+			string input = getUserInput(cout, cin, "Enter Selection");
 			//check if the input string is a valid identifier for a menu item.
 			MenuBase::MenuBasePtr item = menu->getItem(input);
 
 			if (item.get() != NULL)
 			{
-				handleSelection(item, std::cin, std::cout);
+				handleSelection(item, cin, cout);
 				//quit is a special case here:
 				quit = item->getName() == QUITN;
 			}
 		}
+		catch(GenerateException e)
+		{
+			cout << e.what() << endl;
+			cout << "Press ENTER to continue" << endl;
+			cin.ignore();
+			cin.get();
+		}
 		catch(DisplayException e)
 		{
-			std::cout << e.what() << std::endl;
+			cout << e.what() << endl;
+			//pause the loop until the user presses a key
+			cout << "Press ENTER to continue" << endl;
+			cin.ignore();
+			cin.get();
 		}
 		catch(...)
 		{
-			std::cout << "An unexpected event has occured, remain indoors!" << std::endl;
+			cout << "An unexpected event has occured, remain indoors!" << endl;
+			cout << "Press ENTER to continue" << endl;
+			cin.ignore();
+			cin.get();
 		}
 	}
 }
@@ -144,14 +160,14 @@ void TextView::updateClockTail()
 	updateClocktailsList(newOne);
 }
 
-void TextView::printGeneratorInfo(std::ostream &out)
+void TextView::printGeneratorInfo(ostream &out)
 {
 	out << "Using Generator: ";
 	model.print(out);
-	out << std::endl;
+	out << endl;
 }
 
-FeedBack TextView::getUserFeedBack(std::istream &in, std::ostream &out)
+FeedBack TextView::getUserFeedBack(istream &in, ostream &out)
 {
 	bool valid = false;	
 	//default score of 0.
@@ -160,13 +176,13 @@ FeedBack TextView::getUserFeedBack(std::istream &in, std::ostream &out)
 	do 
 	{
 		out << "Please rate clocktail from 0 (worst) to 9 (best), or type q to cancel: ";
-		std::string inputStr;
+		string inputStr;
 		in >> inputStr;
 
 		if (inputStr == "q")
 			break;
 
-		std::istringstream iss(inputStr);
+		istringstream iss(inputStr);
 
 		valid = (iss >> value) && value >= 0 && value < 10;
 	} while (!valid);
@@ -181,25 +197,25 @@ FeedBack TextView::getUserFeedBack(std::istream &in, std::ostream &out)
 	return theFeedBack;
 }
 
-void TextView::printMenu(MenuBase::MenuBasePtr theMenu, std::ostream &output)
+void TextView::printMenu(MenuBase::MenuBasePtr theMenu, ostream &output)
 {
 	theMenu->print(output,1);
 }
 
-void TextView::printClockTail(std::ostream &output, ClockTail &clocktail)
+void TextView::printClockTail(ostream &output, ClockTail &clocktail)
 {
-	const std::vector<std::string> &mixers = clocktail.getMixers();
-	const std::vector<std::string> &spirits = clocktail.getSpirits();
+	const vector<Mixer> &mixers = clocktail.getMixers();
+	const vector<Spirit> &spirits = clocktail.getSpirits();
 	
-	std::ostringstream nameAcc;
-	nameAcc << clocktail.getName();
+	ostringstream nameAcc;
+	nameAcc << clocktail.getName().getValue();
 
 	nameAcc << ": ";
-	copy(spirits.begin(), spirits.end(), std::ostream_iterator<std::string>(nameAcc, ", "));
-	copy(mixers.begin(), mixers.end(), std::ostream_iterator<std::string>(nameAcc, ", "));
+//	copy(spirits.begin(), spirits.end(), ostream_iterator<string>(nameAcc, ", "));
+//	copy(mixers.begin(), mixers.end(), ostream_iterator<string>(nameAcc, ", "));
 	
 	//cut off the last ", "
-	std::string tmpName = nameAcc.str();
+	string tmpName = nameAcc.str();
 
 	if (tmpName.length() > 2)
 	{
@@ -209,17 +225,17 @@ void TextView::printClockTail(std::ostream &output, ClockTail &clocktail)
 	output << tmpName;
 }
 
-void TextView::printClockTail(std::ostream &output, ClockTail &clocktail, FeedBack &feedback)
+void TextView::printClockTail(ostream &output, ClockTail &clocktail, FeedBack &feedback)
 {
 	printClockTail(output, clocktail);	
 	output << " (" << feedback.getScore() << ").";
 }
 
-void TextView::printClockTails(std::ostream &output)
+void TextView::printClockTails(ostream &output)
 {
 	//print last first, as doing it the other way feels wrong
-	std::list<FeedBack>::reverse_iterator feedback = lastNFeedBacks.rbegin();
-	for (std::list<ClockTail>::reverse_iterator it = lastNClockTails.rbegin(); it != lastNClockTails.rend(); ++it)
+	list<FeedBack>::reverse_iterator feedback = lastNFeedBacks.rbegin();
+	for (list<ClockTail>::reverse_iterator it = lastNClockTails.rbegin(); it != lastNClockTails.rend(); ++it)
 	{
 		if (feedback != lastNFeedBacks.rend())
 		{
@@ -230,14 +246,14 @@ void TextView::printClockTails(std::ostream &output)
 		{
 			printClockTail(output, (*it));
 		}
-		output << std::endl;
+		output << endl;
 	}	
 }
 
-std::string TextView::getUserInput(std::ostream &output, std::istream &input, const char *promptString)
+string TextView::getUserInput(ostream &output, istream &input, const char *promptString)
 {
 	output << promptString << ": ";
-	std::string userInput;
+	string userInput;
 	input >> userInput;
 	return userInput;
 }
@@ -275,10 +291,10 @@ void TextView::clearScreen()
 	//something dangerous and unportable instead! :-)
 	int retval = system("clear");
 	if (retval != 0)
-		std::cerr << "Error! clear screen command failed to execute!" << std::endl;
+		cerr << "Error! clear screen command failed to execute!" << endl;
 }
 
-void TextView::printHeader(std::ostream &out)
+void TextView::printHeader(ostream &out)
 {
-	out << "Welcome to ClockTails version 0.1" << std::endl;
+	out << "Welcome to ClockTails version 0.1" << endl;
 }

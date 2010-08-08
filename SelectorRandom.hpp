@@ -32,6 +32,11 @@
 class SelectorRandom : public Selector
 {
 	public:
+		typedef const vector<vector<Name *> > Names;
+		typedef const vector<vector<Mixer *> > Mixers;
+		typedef const vector<vector<Spirit *> > Spirits;
+
+	public:
 		SelectorRandom();
 		SelectorRandom(const unsigned int seed);
 
@@ -39,12 +44,9 @@ class SelectorRandom : public Selector
 
 		virtual void print(std::ostream &out) const;
 
-		void setNameFiles(const std::vector<InputFile> &nameFiles);
-		void setDrinksFiles(const std::vector<InputFile> &mixerFiles, const std::vector<InputFile> &spiritFiles);
+		void setComponents(Names &names, Mixers &mixers, Spirits &spirits);
 
 	protected:
-		virtual std::string getRandomLine(const InputFile &input);
-
 		CombinationSet nameCombinations;
 		CombinationSet drinkCombinations;
 

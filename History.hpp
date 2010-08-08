@@ -54,7 +54,7 @@ class History
 			size_t operator() (const ClockTail &clockTail) const
 			{
 				std::hash<std::string>  strhasher;
-				return strhasher(clockTail.getName());
+				return strhasher(clockTail.getName().getValue());
 			}
 		};
 		std::unordered_map<ClockTail, FeedBack, ClockTailHash> clockTailFeedBack;

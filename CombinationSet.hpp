@@ -28,12 +28,21 @@
 
 using namespace std;
 
+/*
+ * Combinable interface, anything implementing this can be put in a Combination set.
+ */
+class Combinable
+{
+	public:
+		virtual const string &getCombinable() const=0;		
+};
+
 class CombinationSet
 {
 	public:
-		typedef vector<string> Combination;
+		typedef vector<Combinable *> Combination;
 		typedef list<Combination>::iterator CombinationIterator;
-		typedef vector<string> StringSet;
+		typedef vector<Combinable *> StringSet;
 		typedef vector<StringSet> StringSets;
 		typedef const vector<StringSet> ConstStringSets;
 

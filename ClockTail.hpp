@@ -22,6 +22,10 @@
 #include <vector>
 #include <string>
 
+#include "ClockTailComponents.hpp"
+
+using namespace std;
+
 class ClockTail
 {
 	public:
@@ -31,28 +35,28 @@ class ClockTail
 
 		ClockTail &operator=(const ClockTail &rhs);
 
-		void addMixer(const std::string &mixer);
-		void addSpirit(const std::string &spirit);
-		void addNameComponent(const std::string &name);
+		void addMixer(const Mixer &mixer);
+		void addSpirit(const Spirit &spirit);
+		void addNameComponent(const Name &name);
 
-		void setMixers(const std::vector<std::string> &mixers);
-		void setSpirits(const std::vector<std::string> &spirits);
-		void setNameComponents(const std::vector<std::string> &names);
+		void setMixers(const vector<Mixer> &mixers);
+		void setSpirits(const vector<Spirit> &spirits);
+		void setNameComponents(const vector<Name> &names);
 		
 		//get the name of the clocktail from the name components
-		std::string getName() const;
-		const std::vector<std::string> &getMixers() const;
-		const std::vector<std::string> &getSpirits() const;
+		Name getName() const;
+		const vector<Mixer> &getMixers() const;
+		const vector<Spirit> &getSpirits() const;
 
-		void print(std::ostream &output) const;
+		void print(ostream &output) const;
 
 		bool operator==(const ClockTail &rhs) const;
 		bool operator!=(const ClockTail &rhs) const;
 		
 	private:
-		std::vector<std::string> namecomponents;
-		std::vector<std::string> spirits;
-		std::vector<std::string> mixers;
+		vector<Name> namecomponents;
+		vector<Spirit> spirits;
+		vector<Mixer> mixers;
 };
 
 #endif

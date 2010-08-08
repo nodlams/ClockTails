@@ -78,8 +78,15 @@ void ClockTailGenerator::notifyObservers()
 
 void ClockTailGenerator::generateNextClockTail()
 {
-	currentClockTail = ctSelector.generateClockTail(nameFiles, mixerFiles, spiritFiles);
-	notifyObservers();
+	try
+	{
+		currentClockTail = ctSelector.generateClockTail();
+		notifyObservers();
+	}
+	catch (SelectorException e)
+	{
+		throw GenerateException(e.what());	
+	}
 }
 
 void ClockTailGenerator::receiveClockTailFeedback(const FeedBack &feedback)

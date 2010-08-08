@@ -28,101 +28,102 @@
 #include <memory>
 #include <boost/program_options.hpp>
 
-namespace po = boost::program_options;
+using namespace std;
+using namespace boost::program_options;
 
-po::options_description setupArgs()
+options_description setupArgs()
 {
-	po::options_description desc("Allowed Arguments");
+	options_description desc("Allowed Arguments");
 	//yes this is valid c++, stop crying!
 	desc.add_options()
 		("help", "produce help message")
-		("mixers,M", po::value<std::vector<std::string> >()->multitoken(), "Files containing mixer names")
-		("spirits,S", po::value<std::vector<std::string> >()->multitoken(), "Files containing spirit names")
-		("names,N", po::value<std::vector<std::string> >()->multitoken(), "Files containing drink names");
+		("mixers,M", value<vector<string> >()->multitoken(), "Files containing mixer names")
+		("spirits,S", value<vector<string> >()->multitoken(), "Files containing spirit names")
+		("names,N", value<vector<string> >()->multitoken(), "Files containing drink names");
 
 	return desc;
 }
 
-po::variables_map parseArgs(int argc, char **argv, po::options_description &desc)
+variables_map parseArgs(int argc, char **argv, options_description &desc)
 {
-	po::variables_map vm;
-	po::store(po::parse_command_line(argc, argv, desc), vm);	
-	po::notify(vm);
+	variables_map vm;
+	store(parse_command_line(argc, argv, desc), vm);	
+	notify(vm);
 
 	if (vm.count("help"))
 	{
-		std::cout << desc << std::endl;
+		cout << desc << endl;
 		exit(1);
 	}
 
 	return vm;
 }
 
-bool checkArgs(po::variables_map &vars)
+bool checkArgs(variables_map &vars)
 {
 	bool argsOk = true;
 	if (vars.count("mixers") == 0)
 	{
-		std::cerr << "Please enter at least one mixers file" << std::endl;
+		cerr << "Please enter at least one mixers file" << endl;
 		argsOk = false;
 	}
 	if (vars.count("spirits") == 0)
 	{
-		std::cerr << "Please enter at least one spirits file" << std::endl;
+		cerr << "Please enter at least one spirits file" << endl;
 		argsOk = false;
 	}
 	if (vars.count("names") == 0)
 	{
-		std::cerr << "Please enter at lest one name file" << std::endl;
+		cerr << "Please enter at lest one name file" << endl;
 		argsOk = false;
 	}
 	return argsOk;
 }
 
-bool checkFileExists(const std::string &filename)
+bool checkFileExists(const string &filename)
 {
 	bool fileExists = true;
-	std::fstream fstr;
-	fstr.open(filename.c_str(), std::ios::in);
+	fstream fstr;
+	fstr.open(filename.c_str(), ios::in);
 	if (!fstr.is_open())
 	{
-		std::cerr << "Failed to open file " << filename << std::endl;
+		cerr << "Failed to open file " << filename << endl;
 		fileExists = false;
 	}
 	return fileExists;
 }
 
-bool checkFilesAndAddToModel(po::variables_map &vars, ClockTailGenerator *model)
+bool checkFilesAndAddToModel(variables_map &vars, ClockTailGenerator *model)
 {
-	std::vector<std::string> spFiles = vars["spirits"].as<std::vector<std::string> >();
-	std::vector<std::string> mFiles = vars["mixers"].as<std::vector<std::string> >();
-	std::vector<std::string> nFiles = vars["names"].as<std::vector<std::string> >();
+	vector<string> spFiles = vars["spirits"].as<vector<string> >();
+	vector<string> mFiles = vars["mixers"].as<vector<string> >();
+	vector<string> nFiles = vars["names"].as<vector<string> >();
 
 	bool allFilesOk = false;
-	for (std::vector<std::string>::iterator it = spFiles.begin(); it != spFiles.end(); ++it)
+	for (vector<string>::iterator it = spFiles.begin(); it != spFiles.end(); ++it)
 	{
 		allFilesOk = allFilesOk || checkFileExists(*it);
-		std::fstream istr;
-		istr.open((*it).c_str(), std::ios::in);
+		fstream istr;
+		istr.open((*it).c_str(), ios::in);
 		InputFile infile;
 		infile.loadData(istr);
 		model->addSpiritFile(infile);
 	}
-	for (std::vector<std::string>::iterator it = mFiles.begin(); it != mFiles.end(); ++it)
+	for (vector<string>::iterator it = mFiles.begin(); it != mFiles.end(); ++it)
 	{
 		allFilesOk = allFilesOk || checkFileExists(*it);
-		std::fstream istr;
-		istr.open((*it).c_str(), std::ios::in);
+		fstream istr;
+		istr.open((*it).c_str(), ios::in);
 		InputFile infile;
 		infile.loadData(istr);
 		model->addMixerFile(infile);
 	}
-	for (std::vector<std::string>::iterator it = nFiles.begin(); it != nFiles.end(); ++it)
+	for (vector<string>::iterator it = nFiles.begin(); it != nFiles.end(); ++it)
 	{
-		std::cout << (*it) << std::endl;
+		cout << (*it) << endl;
 		allFilesOk = allFilesOk || checkFileExists(*it);
-		std::fstream istr;
-		istr.open((*it).c_str(), std::ios::in);
+		fstream istr;
+		istr.open((*it).c_str(), ios::in);
 		InputFile infile;
 		infile.loadData(istr);
 		model->addNameFile(infile);
@@ -133,12 +134,12 @@ bool checkFilesAndAddToModel(po::variables_map &vars, ClockTailGenerator *model)
 
 int main(int argc, char **argv)
 {
-	po::options_description desc = setupArgs();
-	po::variables_map vm = parseArgs(argc, argv, desc);
+	options_description desc = setupArgs();
+	variables_map vm = parseArgs(argc, argv, desc);
 	bool argsOk = checkArgs(vm);
 	if (!argsOk)
 	{
-		std::cout << desc << std::endl;
+		cout << desc << endl;
 		return -1;
 	}
 
@@ -148,12 +149,12 @@ int main(int argc, char **argv)
 	//TODO: Need to work out a way to get around the problem of passing in the name strings to the generator and the model.
 	//actually thinking about it, there's no need for the model to know anything about the clocktail strings, they should just go to the generator.
 	ClockTailGenerator *ctgenPtr = new ClockTailGenerator(rs,hist);
-	std::auto_ptr<CTModelIface> model(ctgenPtr);
+	auto_ptr<CTModelIface> model(ctgenPtr);
 
 	bool filesOk = checkFilesAndAddToModel(vm,ctgenPtr);
 	if (!filesOk)
 	{
-		std::cout << desc << std::endl;
+		cout << desc << endl;
 		return -1;
 	}
 
