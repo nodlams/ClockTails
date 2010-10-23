@@ -17,6 +17,7 @@
  */
 
 #include "../CombinationSet.hpp"
+#include "../ClockTailComponents.hpp"
 #include <iostream>
 #include <sstream>
 #include <iterator>
@@ -25,39 +26,40 @@ using namespace std;
 
 int testGenerateCombis(CombinationSet &combiSet)
 {
-	vector<string> set1;
-	set1.push_back("1test1");	
-	set1.push_back("1test2");	
-	set1.push_back("1test3");	
-	set1.push_back("1test4");	
-	set1.push_back("1test5");	
-	vector<string> set2;
-	set2.push_back("2test1");	
-	set2.push_back("2test2");	
-	set2.push_back("2test3");	
-	set2.push_back("2test4");	
-	set2.push_back("2test5");	
-	set2.push_back("2test6");	
-	set2.push_back("2test7");	
-	vector<string> set3;
-	set3.push_back("3test1");	
-	set3.push_back("3test2");	
-	set3.push_back("3test3");	
-	set3.push_back("3test4");	
-	set3.push_back("3test5");	
-	set3.push_back("3test6");	
-	set3.push_back("3test7");	
-	set3.push_back("3test8");	
-	set3.push_back("3test9");	
-	set3.push_back("3test10");	
-	set3.push_back("3test11");	
-	set3.push_back("3test12");	
-	set3.push_back("3test13");	
-	set3.push_back("3test14");	
-	set3.push_back("3test15");	
-	set3.push_back("3test16");	
+	//note: this leaks memory, but the program will terminate after this method returns
+	vector<Combinable *> set1;
+	set1.push_back(new Name("1test1"));	
+	set1.push_back(new Name("1test2"));	
+	set1.push_back(new Name("1test3"));	
+	set1.push_back(new Name("1test4"));	
+	set1.push_back(new Name("1test5"));	
+	vector<Combinable *> set2;
+	set2.push_back(new Name("2test1"));	
+	set2.push_back(new Name("2test2"));	
+	set2.push_back(new Name("2test3"));	
+	set2.push_back(new Name("2test4"));	
+	set2.push_back(new Name("2test5"));	
+	set2.push_back(new Name("2test6"));	
+	set2.push_back(new Name("2test7"));	
+	vector<Combinable *> set3;
+	set3.push_back(new Name("3test1"));	
+	set3.push_back(new Name("3test2"));	
+	set3.push_back(new Name("3test3"));	
+	set3.push_back(new Name("3test4"));	
+	set3.push_back(new Name("3test5"));	
+	set3.push_back(new Name("3test6"));	
+	set3.push_back(new Name("3test7"));	
+	set3.push_back(new Name("3test8"));	
+	set3.push_back(new Name("3test9"));	
+	set3.push_back(new Name("3test10"));	
+	set3.push_back(new Name("3test11"));	
+	set3.push_back(new Name("3test12"));	
+	set3.push_back(new Name("3test13"));	
+	set3.push_back(new Name("3test14"));	
+	set3.push_back(new Name("3test15"));	
+	set3.push_back(new Name("3test16"));	
 
-	vector<vector<string> > stringSets;
+	vector<vector<Combinable *> > stringSets;
 	stringSets.push_back(set1);
 	stringSets.push_back(set2);
 	stringSets.push_back(set3);
@@ -82,15 +84,17 @@ int testGenerateCombis(CombinationSet &combiSet)
 
 	//check the first and last combination are sensible.
 	CombinationSet::CombinationIterator combiIt = set.begin();
-	vector<string> &firstCombi = *combiIt;
+	CombinationSet::Combination &firstCombi = *combiIt;
 	advance(combiIt,set.size()-1);
-	vector<string> &lastCombi = *combiIt;
+	CombinationSet::Combination &lastCombi = *combiIt;
 
-	vector<string>::iterator set1It = set1.begin();
-	vector<string>::iterator set2It = set2.begin();
-	vector<string>::iterator set3It = set3.begin();
+	vector<Combinable *>::iterator set1It = set1.begin();
+	vector<Combinable *>::iterator set2It = set2.begin();
+	vector<Combinable *>::iterator set3It = set3.begin();
 	
-	bool firstCorrect = firstCombi[0] == *set1It && firstCombi[1] == *set2It && firstCombi[2] == *set3It;
+	bool firstCorrect = firstCombi[0]->getCombinable() == (*set1It)->getCombinable() && 
+						firstCombi[1]->getCombinable() == (*set2It)->getCombinable() && 
+						firstCombi[2]->getCombinable() == (*set3It)->getCombinable();
 	
 	if (!firstCorrect)
 	{
@@ -102,7 +106,9 @@ int testGenerateCombis(CombinationSet &combiSet)
 	advance(set2It, set2.size()-1);	
 	advance(set3It, set3.size()-1);	
 	
-	bool lastCorrect = lastCombi[0] == *set1It && lastCombi[1] == *set2It && lastCombi[2] == *set3It;
+	bool lastCorrect = lastCombi[0]->getCombinable() == (*set1It)->getCombinable() && 
+						lastCombi[1]->getCombinable() == (*set2It)->getCombinable() && 
+						lastCombi[2]->getCombinable() == (*set3It)->getCombinable();
 
 	if (!lastCorrect)
 	{
