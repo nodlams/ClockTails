@@ -21,6 +21,8 @@
 #include "ClockTail.hpp"
 #include "ClockTailComponents.hpp"
 
+using std::ostringstream;
+
 ClockTail::ClockTail()
 {
 }
@@ -46,53 +48,38 @@ ClockTail &ClockTail::operator=(const ClockTail &rhs)
 	return *this;
 }
 
-void ClockTail::addMixer(const Mixer &mixer)
+void ClockTail::addMixer(shared_ptr<const Mixer> mixer)
 {
-	mixers.push_back(mixer);
+	mixers->push_back(mixer);
 }
 
-void ClockTail::addSpirit(const Spirit &spirit)
+void ClockTail::addSpirit(shared_ptr<const Spirit> spirit)
 {
-	spirits.push_back(spirit);
+	spirits->push_back(spirit);
 }
 
-void ClockTail::addNameComponent(const Name &name)
+void ClockTail::addNameComponent(shared_ptr<const Name> name)
 {
-	namecomponents.push_back(name);
+	namecomponents->push_back(name);
 }
 
-void ClockTail::setMixers(const vector<Mixer> &mixers)
-{
-	this->mixers = mixers;	
-}
-
-void ClockTail::setSpirits(const vector<Spirit> &spirits)
-{
-	this->spirits = spirits;
-}
-
-void ClockTail::setNameComponents(const vector<Name> &names)
-{
-	this->namecomponents = names;
-}
-
-const vector<Mixer> &ClockTail::getMixers() const
+shared_ptr<const vector<shared_ptr<const Mixer> > > ClockTail::getMixers() const
 {
 	return mixers;
 }
 
-const vector<Spirit> &ClockTail::getSpirits() const
+shared_ptr<const vector<shared_ptr<const Spirit> > > ClockTail::getSpirits() const
 {
 	return spirits;
 }
 
 Name ClockTail::getName() const
 {
-	if (namecomponents.size() > 0)
+	if (namecomponents->size() > 0)
 	{
 		ostringstream oss;
-		for (vector<Name>::const_iterator it = namecomponents.begin(); it != namecomponents.end(); ++it)
-			oss << (*it).getValue() << " ";
+		for (vector<shared_ptr<const Name> >::const_iterator it = namecomponents->begin(); it != namecomponents->end(); ++it)
+			oss << (*it)->getValue() << " ";
 		string tmpName = oss.str();
 		//chop off that last space from the name
 		return tmpName.substr(0, tmpName.length()-2);

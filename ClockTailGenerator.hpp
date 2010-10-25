@@ -31,9 +31,7 @@ class FeedBack;
 class CTObserver;
 class Selector;
 
-using namespace std;
-
-class GenerateException : public runtime_error
+class GenerateException : public std::runtime_error
 {
 	public:
 		GenerateException(const char *what)
@@ -49,37 +47,37 @@ class ClockTailGenerator : public CTModelIface
 		typedef vector<Spirit> SpiritSet;
 
 	public:
-		ClockTailGenerator(Selector &selector, History &history);
+		ClockTailGenerator(shared_ptr<Selector> selector, shared_ptr<History> history);
 		ClockTailGenerator(const ClockTailGenerator &rhs);
 		virtual ~ClockTailGenerator();
 
 		ClockTailGenerator &operator=(const ClockTailGenerator &rhs);
 
 		virtual void initialise();
-		virtual void registerObserver(CTObserver &observer);
+		virtual void registerObserver(shared_ptr<CTObserver> observer);
 		//notify the observers that a new clocktail was generated
 		virtual void notifyObservers();
 
 		virtual void generateNextClockTail(); //throw GenerateException
-		virtual void print(ostream &out);
+		virtual void print(ostream &out) const;
 
-		virtual void receiveClockTailFeedback(const FeedBack &feedback);
-		virtual ClockTail getCurrentClockTail();
+		virtual void receiveClockTailFeedback(shared_ptr<FeedBack> feedback);
+		virtual shared_ptr<const ClockTail> getCurrentClockTail() const;
 		virtual void deinitialise();
 
-		virtual void addSpiritFile(InputFile &input);
-		virtual void addMixerFile(InputFile &input);
-		virtual void addNameFile(InputFile &input);
+		virtual void addSpiritFile(shared_ptr<const InputFile> input);
+		virtual void addMixerFile(shared_ptr<const InputFile> input);
+		virtual void addNameFile(shared_ptr<const InputFile> input);
 
-		virtual void setSelector(Selector &selector);
-		virtual Selector &getSelector();
+		virtual void setSelector(shared_ptr<Selector> selector);
+		virtual shared_ptr<Selector> getSelector();
 
 	protected:
-		vector<InputFile> spiritFiles, mixerFiles, nameFiles;
-		vector<CTObserver *> observers;
-		ClockTail currentClockTail;
-		Selector &ctSelector;
-		History &ctHistory;
+		vector<shared_ptr<const InputFile> > spiritFiles, mixerFiles, nameFiles;
+		vector<shared_ptr<CTObserver> > observers;
+		shared_ptr<const ClockTail> currentClockTail;
+		shared_ptr<Selector> ctSelector;
+		shared_ptr<History> ctHistory;
 };
 
 #endif

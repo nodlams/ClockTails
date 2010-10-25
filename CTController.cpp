@@ -21,8 +21,8 @@
 #include "CTModelIface.hpp"
 #include "FeedBack.hpp"
 
-CTController::CTController(CTModelIface &theModel)
-	: model(theModel), view(theModel, *this)
+CTController::CTController(shared_ptr<CTModelIface> theModel)
+	: model(theModel), view(new TextView(theModel, shared_from_this()))
 {
 
 }
@@ -52,12 +52,12 @@ CTController &CTController::operator=(const CTController &rhs)
 
 void CTController::generateClockTail()
 {
-	model.generateNextClockTail();
+	model->generateNextClockTail();
 }
 
-void CTController::sendCTFeedBack(const FeedBack &feedback)
+void CTController::sendCTFeedBack(shared_ptr<const FeedBack> feedback)
 {
-	model.receiveClockTailFeedback(feedback);
+	model->receiveClockTailFeedback(feedback);
 }
 
 void CTController::exit()

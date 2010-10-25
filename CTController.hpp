@@ -22,25 +22,27 @@
 #include "CTControllerIface.hpp"
 #include "TextView.hpp"
 
+#include <boost/enable_shared_from_this.hpp>
+
 class CTModelIface;
 class FeedBack;
 
-class CTController : public CTControllerIface
+class CTController : public CTControllerIface, boost::enable_shared_from_this<CTController>
 {
 	public:
-		CTController(CTModelIface &model);
+		CTController(shared_ptr<CTModelIface> model);
 		CTController(const CTController &rhs);
 		virtual ~CTController();
 
 		CTController &operator=(const CTController &rhs);
 
 		virtual void generateClockTail();
-		virtual void sendCTFeedBack(const FeedBack &feedback);
+		virtual void sendCTFeedBack(shared_ptr<const FeedBack> feedback);
 		virtual void exit();
 
 	private:
-		CTModelIface &model;
-		TextView view;
+		shared_ptr<CTModelIface> model;
+		shared_ptr<TextView> view;
 };
 
 #endif

@@ -20,6 +20,9 @@
 #define __CTMODELIFACE_HPP__
 
 #include <iostream>
+#include <boost/shared_ptr.hpp>
+
+using boost::shared_ptr;
 
 class FeedBack;
 class CTObserver;
@@ -36,10 +39,10 @@ class CTModelIface
 		//ask the model to generate a new clocktail
 		virtual void generateNextClockTail()=0;
 		//take feedback regarding the current clocktail. 
-		virtual void receiveClockTailFeedback(const FeedBack &feedback)=0;
+		virtual void receiveClockTailFeedback(shared_ptr<const FeedBack> feedback)=0;
 		//return the clocktail that was just generate, or generate one and
 		//return if there is no current clocktail.
-		virtual ClockTail getCurrentClockTail()=0;
+		virtual shared_ptr<const ClockTail> getCurrentClockTail()=0;
 		//called when the program will exit.
 		virtual void deinitialise()=0;
 		//output information for this generator to the output stream.

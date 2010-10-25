@@ -19,51 +19,21 @@
 #define __CLOCKTAILCOMPONENTS_HPP__
 
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "CombinationSet.hpp"
 
-class ClockTailComponent : public Combinable
+class ClockTailComponent
 {
 	public:
+		ClockTailComponent(const string value);
 		virtual ~ClockTailComponent();
-		virtual const string &getValue() const=0;
-		virtual const string &getCombinable() const;
-};
-
-class Name : public ClockTailComponent
-{
-	public:
-		Name(const string &value);
-		virtual ~Name();
-
 		virtual const string &getValue() const;
-
-	protected:
-		string name;
+	private:
+		boost::shared_ptr<string> m_value;
 };
 
-class Mixer : public ClockTailComponent
-{
-	public:
-		Mixer(const string &value);
-		virtual ~Mixer();
+typedef ClockTailComponent Spirit, Mixer, Name;
 
-		virtual const string &getValue() const;
-
-	protected:
-		string mixer;
-};
-
-class Spirit : public ClockTailComponent
-{
-	public:
-		Spirit(const string &value);
-		virtual ~Spirit();
-
-		virtual const string &getValue() const;
-
-	protected:
-		string spirit;
-};
 
 #endif

@@ -22,7 +22,7 @@
 #include "ClockTail.hpp"
 #include "Selector.hpp"
 
-ClockTailGenerator::ClockTailGenerator(Selector &selector, History &history)
+ClockTailGenerator::ClockTailGenerator(shared_ptr<Selector> selector, shared_ptr<History> history)
 	: ctSelector(selector), ctHistory(history)
 {
 }
@@ -63,14 +63,14 @@ void ClockTailGenerator::initialise()
 {
 }
 
-void ClockTailGenerator::registerObserver(CTObserver &observer)
+void ClockTailGenerator::registerObserver(shared_ptr<CTObserver> observer)
 {
-	observers.push_back(&observer);
+	observers.push_back(observer);
 }
 
 void ClockTailGenerator::notifyObservers()
 {
-	for (std::vector<CTObserver *>::iterator it = observers.begin(); it != observers.end(); ++it)
+	for (std::vector<shared_ptr<CTObserver> >::iterator it = observers.begin(); it != observers.end(); ++it)
 	{
 		(*it)->updateClockTail();
 	}		
@@ -80,7 +80,7 @@ void ClockTailGenerator::generateNextClockTail()
 {
 	try
 	{
-		currentClockTail = ctSelector.generateClockTail();
+		currentClockTail = ctSelector->generateClockTail();
 		notifyObservers();
 	}
 	catch (SelectorException e)
@@ -89,12 +89,12 @@ void ClockTailGenerator::generateNextClockTail()
 	}
 }
 
-void ClockTailGenerator::receiveClockTailFeedback(const FeedBack &feedback)
+void ClockTailGenerator::receiveClockTailFeedback(shared_ptr<FeedBack> feedback)
 {
-	ctHistory.recordGeneratedClockTail(currentClockTail, feedback);	
+	ctHistory->recordGeneratedClockTail(currentClockTail, feedback);	
 }
 
-ClockTail ClockTailGenerator::getCurrentClockTail()
+shared_ptr<const ClockTail> ClockTailGenerator::getCurrentClockTail() const
 {
 	return currentClockTail;
 }
@@ -103,32 +103,32 @@ void ClockTailGenerator::deinitialise()
 {
 }
 
-void ClockTailGenerator::addSpiritFile(InputFile &input)
+void ClockTailGenerator::addSpiritFile(shared_ptr<const InputFile> input)
 {
 	spiritFiles.push_back(input);
 }
 
-void ClockTailGenerator::addMixerFile(InputFile &input)
+void ClockTailGenerator::addMixerFile(shared_ptr<const InputFile> input)
 {
 	mixerFiles.push_back(input);
 }
 
-void ClockTailGenerator::addNameFile(InputFile &input)
+void ClockTailGenerator::addNameFile(shared_ptr<const InputFile> input)
 {
 	nameFiles.push_back(input);
 }
 
-void ClockTailGenerator::print(std::ostream &str)
+void ClockTailGenerator::print(std::ostream &str) const
 {
-	ctSelector.print(str);
+	ctSelector->print(str);
 }
 
-Selector &ClockTailGenerator::getSelector()
+shared_ptr<Selector> ClockTailGenerator::getSelector()
 {
 	return ctSelector;
 }
 
-void ClockTailGenerator::setSelector(Selector &selector)
+void ClockTailGenerator::setSelector(shared_ptr<Selector> selector)
 {
 	ctSelector = selector;
 }

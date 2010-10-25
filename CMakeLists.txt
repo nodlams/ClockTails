@@ -30,4 +30,4 @@ target_link_libraries(clocktails boost_program_options)
 
 ENABLE_TESTING()
 
-ADD_TEST(Test0 "${ExecutableOutputPath}/tests/TestCombinationSet" "0")
+#ADD_TEST(Test0 "${ExecutableOutputPath}/tests/TestCombinationSet" "0")

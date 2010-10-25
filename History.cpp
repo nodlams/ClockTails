@@ -27,17 +27,7 @@ History::~History()
 {
 }
 
-/*bool History::nameHasBeenGenerated(const ClockTail &clockTail) const
-{
-	return clockTailFeedBack.count(clockTail) > 0;
-}
-
-bool History::recipeHasBeenGenerated(const ClockTail &clockTail) const
-{
-	return false;
-}*/
-
-void History::recordGeneratedClockTail(const ClockTail &clockTail, const FeedBack &feedback)
+void History::recordGeneratedClockTail(shared_ptr<const ClockTail> clockTail, shared_ptr<FeedBack> feedback)
 {
 	clockTailFeedBack[clockTail] = feedback;
 }

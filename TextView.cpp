@@ -26,12 +26,26 @@
 #include <iterator>
 #include <stdlib.h>
 
-using namespace std;
+#include <boost/foreach.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
+
 const string TextView::GENERATEN = "Generate";
 const string TextView::QUITN = "Quit";
 const string TextView::FEEDBACKN = "Rate";
 
-TextView::TextView(CTModelIface &theModel, CTControllerIface &theController)
+using std::istream;
+using std::cout;
+using std::cin;
+using std::cerr;
+using std::endl;
+using std::list;
+using std::ostringstream;
+
+using boost::shared_ptr;
+using boost::make_shared;
+
+TextView::TextView(shared_ptr<CTModelIface> theModel, shared_ptr<CTControllerIface> theController)
 	: model(theModel), controller(theController), menu(initMenus()), currentMenu(menu)
 {
 
@@ -75,20 +89,20 @@ void TextView::handleSelection(MenuBase::MenuBasePtr item, istream &in, ostream 
 			if (lastNClockTails.size() > 0)
 			{
 				//if no feedback was provided, then the default rating of 0 will be assigned to the clocktail.
-				controller.sendCTFeedBack(lastNFeedBacks.front());
+				controller->sendCTFeedBack(lastNFeedBacks.front());
 			}
-			controller.generateClockTail();	
+			controller->generateClockTail();	
 		}
 		else if (itemName == QUITN)
 		{
-			controller.exit();	
+			controller->exit();	
 		}	
 		else if (itemName == FEEDBACKN)
 		{
 			if (lastNClockTails.size() == 0)
 				throw DisplayException("No clocktail to provide feedback for.");
-			FeedBack &firstFeedBack = *lastNFeedBacks.begin();
-			firstFeedBack = getUserFeedBack(in,out);
+			shared_ptr<FeedBack> firstFeedBack = *lastNFeedBacks.begin();
+			(*firstFeedBack) = getUserFeedBack(in,out);
 		}
 	}
 	else
@@ -155,7 +169,7 @@ void TextView::startInputLoop()
 
 void TextView::updateClockTail()
 {
-	ClockTail newOne = model.getCurrentClockTail();
+	shared_ptr<const ClockTail> newOne = model->getCurrentClockTail();
 	//update the list of generated clock tails
 	updateClocktailsList(newOne);
 }
@@ -163,7 +177,7 @@ void TextView::updateClockTail()
 void TextView::printGeneratorInfo(ostream &out)
 {
 	out << "Using Generator: ";
-	model.print(out);
+	model->print(out);
 	out << endl;
 }
 
@@ -182,7 +196,7 @@ FeedBack TextView::getUserFeedBack(istream &in, ostream &out)
 		if (inputStr == "q")
 			break;
 
-		istringstream iss(inputStr);
+		std::istringstream iss(inputStr);
 
 		valid = (iss >> value) && value >= 0 && value < 10;
 	} while (!valid);
@@ -202,13 +216,13 @@ void TextView::printMenu(MenuBase::MenuBasePtr theMenu, ostream &output)
 	theMenu->print(output,1);
 }
 
-void TextView::printClockTail(ostream &output, ClockTail &clocktail)
+void TextView::printClockTail(ostream &output, shared_ptr<const ClockTail> clocktail)
 {
-	const vector<Mixer> &mixers = clocktail.getMixers();
-	const vector<Spirit> &spirits = clocktail.getSpirits();
+	shared_ptr<const vector<shared_ptr<const Mixer> > > mixers = clocktail->getMixers();
+	shared_ptr<const vector<shared_ptr<const Spirit> > > spirits = clocktail->getSpirits();
 	
 	ostringstream nameAcc;
-	nameAcc << clocktail.getName().getValue();
+	nameAcc << clocktail->getName().getValue();
 
 	nameAcc << ": ";
 //	copy(spirits.begin(), spirits.end(), ostream_iterator<string>(nameAcc, ", "));
@@ -225,26 +239,26 @@ void TextView::printClockTail(ostream &output, ClockTail &clocktail)
 	output << tmpName;
 }
 
-void TextView::printClockTail(ostream &output, ClockTail &clocktail, FeedBack &feedback)
+void TextView::printClockTail(ostream &output, shared_ptr<const ClockTail> clocktail, shared_ptr<const FeedBack> feedback)
 {
 	printClockTail(output, clocktail);	
-	output << " (" << feedback.getScore() << ").";
+	output << " (" << feedback->getScore() << ").";
 }
 
 void TextView::printClockTails(ostream &output)
 {
 	//print last first, as doing it the other way feels wrong
-	list<FeedBack>::reverse_iterator feedback = lastNFeedBacks.rbegin();
-	for (list<ClockTail>::reverse_iterator it = lastNClockTails.rbegin(); it != lastNClockTails.rend(); ++it)
+	list<shared_ptr<FeedBack> >::reverse_iterator feedback = lastNFeedBacks.rbegin();
+	BOOST_REVERSE_FOREACH(shared_ptr<const ClockTail> ct, lastNClockTails)
 	{
 		if (feedback != lastNFeedBacks.rend())
 		{
-			printClockTail(output, (*it), (*feedback));
+			printClockTail(output, ct, (*feedback));
 			feedback++;
 		}
 		else
 		{
-			printClockTail(output, (*it));
+			printClockTail(output, ct);
 		}
 		output << endl;
 	}	
@@ -271,10 +285,11 @@ MenuBase::MenuBasePtr TextView::initMenus()
 	return root;
 }
 
-void TextView::updateClocktailsList(ClockTail &newOne)
+void TextView::updateClocktailsList(shared_ptr<const ClockTail> newOne)
 {
+	shared_ptr<FeedBack> newFBack = make_shared<FeedBack>();
 	//store the current Feedback.
-	lastNFeedBacks.push_front(FeedBack());
+	lastNFeedBacks.push_front(newFBack);
 	lastNClockTails.push_front(newOne);
 
 	if (lastNClockTails.size() > STOREDCTCOUNT)

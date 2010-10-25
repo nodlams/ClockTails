@@ -45,19 +45,19 @@ class History
 		 * @param clockTail The clocktail which feedback will be generated for.
 		 * @param feedback The feedback for the clocktail.
 		 */
-		void recordGeneratedClockTail(const ClockTail &clockTail, const FeedBack &feedback);
+		void recordGeneratedClockTail(shared_ptr<const ClockTail> clockTail, shared_ptr<FeedBack> feedback);
 
 	private:
 		//hash function for ClockTail object
 		struct ClockTailHash
 		{
-			size_t operator() (const ClockTail &clockTail) const
+			size_t operator() (shared_ptr<const ClockTail> clockTail) const
 			{
 				std::hash<std::string>  strhasher;
-				return strhasher(clockTail.getName().getValue());
+				return strhasher(clockTail->getName().getValue());
 			}
 		};
-		std::unordered_map<ClockTail, FeedBack, ClockTailHash> clockTailFeedBack;
+		std::unordered_map<shared_ptr<const ClockTail>, shared_ptr<FeedBack>, ClockTailHash> clockTailFeedBack;
 };
 
 #endif

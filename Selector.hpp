@@ -28,7 +28,7 @@
 #include "InputFile.hpp"
 #include "ClockTail.hpp"
 
-class SelectorException : public runtime_error
+class SelectorException : public std::runtime_error
 {
 	public:
 		SelectorException(const char *what)
@@ -40,7 +40,7 @@ class Selector
 {
 	public:
 		Selector();
-		virtual ClockTail generateClockTail()=0; //throw SelectorException
+		virtual shared_ptr<const ClockTail> generateClockTail()=0; //throw SelectorException
 		virtual void print(std::ostream &out) const=0;
 
 	protected:

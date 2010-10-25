@@ -34,6 +34,10 @@ class ClockTail;
 #include <list>
 #include <stdexcept>
 
+#include <boost/shared_ptr.hpp>
+
+using boost::shared_ptr;
+
 /*
  * General exception for the TextView, the message passed as the "what"
  * parameter will be displayed to the user.
@@ -57,7 +61,7 @@ class TextView : public CTObserver
 		static const size_t STOREDCTCOUNT=10;
 
 	public:
-		TextView(CTModelIface &model, CTControllerIface &controller);
+		TextView(shared_ptr<CTModelIface> model, shared_ptr<CTControllerIface> controller);
 		TextView(const TextView &rhs);
 		virtual ~TextView();
 		TextView &operator=(const TextView &rhs);
@@ -89,8 +93,8 @@ class TextView : public CTObserver
 		 * @param the output stream
 		 * @param the clocktail to print
 		 */
-		virtual void printClockTail(std::ostream &output, ClockTail &clocktail);
-		virtual void printClockTail(std::ostream &output, ClockTail &clocktail, FeedBack &feedback);
+		virtual void printClockTail(std::ostream &output, shared_ptr<const ClockTail> clocktail);
+		virtual void printClockTail(std::ostream &output, shared_ptr<const ClockTail> clocktail, shared_ptr<const FeedBack> feedback);
 
 		/**
 		 * Print the clock tails in the history
@@ -128,7 +132,7 @@ class TextView : public CTObserver
 		/**
 		 * Update the list of the last 3 clocktails generated.
 		 */
-		virtual void updateClocktailsList(ClockTail &newOne);
+		virtual void updateClocktailsList(shared_ptr<const ClockTail> newOne);
 
 		/**
 		 * Clears the terminal
@@ -140,16 +144,16 @@ class TextView : public CTObserver
 		 */
 		virtual void printHeader(std::ostream &output);
 
-		CTModelIface &model;
-		CTControllerIface &controller;
+		shared_ptr<CTModelIface> model;
+		shared_ptr<CTControllerIface> controller;
 
 		//The root node for the menu
 		MenuBase::MenuBasePtr menu;	
 		//Pointer to the current menu we are displaying to the user
 		MenuBase::MenuBasePtr currentMenu;
 
-		std::list<ClockTail> lastNClockTails;
-		std::list<FeedBack> lastNFeedBacks;
+		std::list<shared_ptr<const ClockTail> > lastNClockTails;
+		std::list<shared_ptr<FeedBack> > lastNFeedBacks;
 };
 
 #endif

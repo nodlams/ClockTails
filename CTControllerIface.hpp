@@ -18,6 +18,10 @@
 #ifndef __CTCONTROLLERIFACE_HPP__
 #define __CTCONTROLLERIFACE_HPP__
 
+#include <boost/shared_ptr.hpp>
+
+using boost::shared_ptr;
+
 class FeedBack;
 
 class CTControllerIface
@@ -26,7 +30,7 @@ class CTControllerIface
 		virtual ~CTControllerIface(){}
 
 		virtual void generateClockTail()=0;
-		virtual void sendCTFeedBack(const FeedBack &feedback)=0;
+		virtual void sendCTFeedBack(shared_ptr<const FeedBack> feedback)=0;
 		virtual void exit()=0;
 };
 

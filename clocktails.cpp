@@ -23,13 +23,20 @@
 #include "MenuStructure.hpp"
 #include "ClockTailGenerator.hpp"
 #include "History.hpp"
-#include "SelectorRandom.hpp"
 
 #include <memory>
 #include <boost/program_options.hpp>
+#include <boost/make_shared.hpp>
 
-using namespace std;
 using namespace boost::program_options;
+
+using std::cout;
+using std::endl;
+using std::cin;
+using std::cerr;
+using std::fstream;
+using std::ios;
+using boost::make_shared;
 
 options_description setupArgs()
 {
@@ -93,7 +100,7 @@ bool checkFileExists(const string &filename)
 	return fileExists;
 }
 
-bool checkFilesAndAddToModel(variables_map &vars, ClockTailGenerator *model)
+bool checkFilesAndAddToModel(variables_map &vars, shared_ptr<ClockTailGenerator> model)
 {
 	vector<string> spFiles = vars["spirits"].as<vector<string> >();
 	vector<string> mFiles = vars["mixers"].as<vector<string> >();
@@ -105,8 +112,8 @@ bool checkFilesAndAddToModel(variables_map &vars, ClockTailGenerator *model)
 		allFilesOk = allFilesOk || checkFileExists(*it);
 		fstream istr;
 		istr.open((*it).c_str(), ios::in);
-		InputFile infile;
-		infile.loadData(istr);
+		shared_ptr<InputFile> infile = make_shared<InputFile>();
+		infile->loadData(istr);
 		model->addSpiritFile(infile);
 	}
 	for (vector<string>::iterator it = mFiles.begin(); it != mFiles.end(); ++it)
@@ -114,8 +121,8 @@ bool checkFilesAndAddToModel(variables_map &vars, ClockTailGenerator *model)
 		allFilesOk = allFilesOk || checkFileExists(*it);
 		fstream istr;
 		istr.open((*it).c_str(), ios::in);
-		InputFile infile;
-		infile.loadData(istr);
+		shared_ptr<InputFile> infile = make_shared<InputFile>();
+		infile->loadData(istr);
 		model->addMixerFile(infile);
 	}
 	for (vector<string>::iterator it = nFiles.begin(); it != nFiles.end(); ++it)
@@ -124,8 +131,8 @@ bool checkFilesAndAddToModel(variables_map &vars, ClockTailGenerator *model)
 		allFilesOk = allFilesOk || checkFileExists(*it);
 		fstream istr;
 		istr.open((*it).c_str(), ios::in);
-		InputFile infile;
-		infile.loadData(istr);
+		shared_ptr<InputFile> infile = make_shared<InputFile>();
+		infile->loadData(istr);
 		model->addNameFile(infile);
 	}
 
@@ -143,13 +150,10 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	History hist;
-	SelectorRandom rs;
+	shared_ptr<History> hist = make_shared<History>();
+	shared_ptr<SelectorRandom> rs = make_shared<SelectorRandom>();
 
-	//TODO: Need to work out a way to get around the problem of passing in the name strings to the generator and the model.
-	//actually thinking about it, there's no need for the model to know anything about the clocktail strings, they should just go to the generator.
-	ClockTailGenerator *ctgenPtr = new ClockTailGenerator(rs,hist);
-	auto_ptr<CTModelIface> model(ctgenPtr);
+	shared_ptr<CTModelIface> ctgenPtr = make_shared<ClockTailGenerator>(rs,hist);
 
 	bool filesOk = checkFilesAndAddToModel(vm,ctgenPtr);
 	if (!filesOk)

@@ -21,10 +21,13 @@
 
 #include <vector>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 #include "ClockTailComponents.hpp"
 
-using namespace std;
+using std::vector;
+using std::ostream;
+using boost::shared_ptr;
 
 class ClockTail
 {
@@ -35,18 +38,14 @@ class ClockTail
 
 		ClockTail &operator=(const ClockTail &rhs);
 
-		void addMixer(const Mixer &mixer);
-		void addSpirit(const Spirit &spirit);
-		void addNameComponent(const Name &name);
-
-		void setMixers(const vector<Mixer> &mixers);
-		void setSpirits(const vector<Spirit> &spirits);
-		void setNameComponents(const vector<Name> &names);
+		void addMixer(shared_ptr<const Mixer> mixer);
+		void addSpirit(shared_ptr<const Spirit> spirit);
+		void addNameComponent(shared_ptr<const Name> name);
 		
 		//get the name of the clocktail from the name components
 		Name getName() const;
-		const vector<Mixer> &getMixers() const;
-		const vector<Spirit> &getSpirits() const;
+		shared_ptr<const vector<shared_ptr<const Mixer> > > getMixers() const;
+		shared_ptr<const vector<shared_ptr<const Spirit> > > getSpirits() const;
 
 		void print(ostream &output) const;
 
@@ -54,9 +53,9 @@ class ClockTail
 		bool operator!=(const ClockTail &rhs) const;
 		
 	private:
-		vector<Name> namecomponents;
-		vector<Spirit> spirits;
-		vector<Mixer> mixers;
+		shared_ptr<vector<shared_ptr<const Name> > > namecomponents;
+		shared_ptr<vector<shared_ptr<const Spirit> > > spirits;
+		shared_ptr<vector<shared_ptr<const Mixer> > > mixers;
 };
 
 #endif

@@ -17,53 +17,17 @@
  */
 #include "ClockTailComponents.hpp"
 
+ClockTailComponent::ClockTailComponent(const string value)
+	: m_value(new string(value))
+{
+}
+
 ClockTailComponent::~ClockTailComponent()
 {
 }
 
-const string &ClockTailComponent::getCombinable() const
+const string &ClockTailComponent::getValue() const
 {
-	return getValue();
+	return *m_value;
 }
 
-Name::Name(const string &value)
-	: name(value)
-{
-}
-
-Name::~Name()
-{
-}
-
-const string &Name::getValue() const
-{
-	return name;
-}
-
-Mixer::Mixer(const string &value)
-	: mixer(value)
-{
-}
-
-Mixer::~Mixer()
-{
-}
-
-const string &Mixer::getValue() const
-{
-	return mixer;
-}
-
-Spirit::Spirit(const string &value)
-	: spirit(value)
-{
-}
-
-Spirit::~Spirit()
-{
-}
-
-const string &Spirit::getValue() const
-{
-	return spirit;
-}
